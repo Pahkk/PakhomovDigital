@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { motion } from "framer-motion";
+import * as THREE from "three";
 import {
   AppWindow,
   ArrowRight,
@@ -94,6 +95,33 @@ const process = [
   ["02", "Shape the Product", "We turn it into a clear scope, screen plan, user flow, feature list, and launch direction."],
   ["03", "Build the Version", "We design and develop the app, website, dashboard, or MVP with focused communication."],
   ["04", "Launch & Handoff", "You leave with a working product, launch assets, and a clear path for what to improve next."]
+];
+
+const scrollStages = [
+  {
+    step: "01",
+    title: "Idea",
+    text: "You start with the rough version: a business problem, app idea, or website that needs to exist.",
+    label: "Raw Concept"
+  },
+  {
+    step: "02",
+    title: "Product Plan",
+    text: "We turn that idea into screens, features, user flow, scope, and a real build direction.",
+    label: "Scope + Screens"
+  },
+  {
+    step: "03",
+    title: "Build",
+    text: "The product becomes software: app screens, website pages, backend logic, forms, dashboards, and integrations.",
+    label: "Development"
+  },
+  {
+    step: "04",
+    title: "Launch",
+    text: "You leave with a working product, launch assets, and the next steps to get it in front of users.",
+    label: "Live Product"
+  }
 ];
 
 const pricing = [
@@ -392,6 +420,190 @@ function Hero() {
   );
 }
 
+function ProductScrollScene() {
+  const sectionRef = useRef(null);
+  const canvasRef = useRef(null);
+  const sceneStateRef = useRef(null);
+  const [activeStage, setActiveStage] = useState(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const section = sectionRef.current;
+    if (!canvas || !section) return undefined;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+    camera.position.set(0, 0.25, 9.5);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const product = new THREE.Group();
+    scene.add(product);
+
+    const material = {
+      dark: new THREE.MeshStandardMaterial({ color: "#111827", roughness: 0.5, metalness: 0.46 }),
+      glass: new THREE.MeshStandardMaterial({ color: "#1f4a5f", roughness: 0.28, metalness: 0.58, transparent: true, opacity: 0.9, emissive: "#082f49", emissiveIntensity: 0.18 }),
+      edge: new THREE.MeshStandardMaterial({ color: "#dbeafe", roughness: 0.22, metalness: 0.72 }),
+      accent: new THREE.MeshStandardMaterial({ color: "#38bdf8", roughness: 0.2, metalness: 0.55, emissive: "#082f49", emissiveIntensity: 0.35 }),
+      muted: new THREE.MeshStandardMaterial({ color: "#64748b", roughness: 0.5, metalness: 0.3 }),
+      outline: new THREE.LineBasicMaterial({ color: "#7dd3fc", transparent: true, opacity: 0.34 })
+    };
+
+    const addBox = (name, size, position, mat) => {
+      const geometry = new THREE.BoxGeometry(...size);
+      const mesh = new THREE.Mesh(geometry, mat);
+      mesh.name = name;
+      mesh.position.set(...position);
+      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), material.outline);
+      edges.name = `${name}-edges`;
+      mesh.add(edges);
+      product.add(mesh);
+      return mesh;
+    };
+
+    const ideaBlock = addBox("ideaBlock", [1.35, 1.35, 1.35], [-0.15, 0.15, 0], material.glass);
+    const appBody = addBox("appBody", [1.55, 2.55, 0.18], [-1.1, -0.05, 0.25], material.dark);
+    const appScreen = addBox("appScreen", [1.34, 2.2, 0.08], [-1.1, -0.05, 0.42], material.glass);
+    const siteBody = addBox("siteBody", [3.25, 1.95, 0.16], [1.05, 0.04, -0.02], material.dark);
+    const siteScreen = addBox("siteScreen", [2.95, 1.5, 0.08], [1.05, -0.05, 0.15], material.glass);
+    const headerLine = addBox("headerLine", [2.45, 0.09, 0.06], [1.0, 0.45, 0.25], material.edge);
+    const ctaLine = addBox("ctaLine", [0.72, 0.12, 0.08], [0.32, -0.55, 0.26], material.accent);
+
+    const chips = Array.from({ length: 12 }, (_, index) => {
+      const angle = (index / 12) * Math.PI * 2;
+      return addBox(
+        `chip-${index}`,
+        [0.18, 0.18, 0.18],
+        [Math.cos(angle) * 2.4, Math.sin(angle) * 1.4, -0.6 + (index % 3) * 0.25],
+        index % 3 === 0 ? material.accent : material.muted
+      );
+    });
+
+    const lightA = new THREE.DirectionalLight("#ffffff", 4.6);
+    lightA.position.set(2.5, 3, 4);
+    scene.add(lightA);
+    const lightB = new THREE.PointLight("#38bdf8", 20, 14);
+    lightB.position.set(-2.5, 1.4, 3);
+    scene.add(lightB);
+    scene.add(new THREE.AmbientLight("#bfdbfe", 0.85));
+
+    const target = { progress: 0 };
+    const updateScroll = () => {
+      const rect = section.getBoundingClientRect();
+      const scrollable = Math.max(1, rect.height - window.innerHeight);
+      const next = Math.min(1, Math.max(0, -rect.top / scrollable));
+      target.progress = next;
+      setActiveStage(Math.min(scrollStages.length - 1, Math.floor(next * scrollStages.length)));
+    };
+
+    const resize = () => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / Math.max(height, 1);
+      camera.updateProjectionMatrix();
+      product.scale.setScalar(width < 640 ? 0.58 : 0.76);
+    };
+
+    const clock = new THREE.Clock();
+    let frameId;
+    const render = () => {
+      const elapsed = clock.getElapsedTime();
+      const p = target.progress;
+      const phase = p * 3;
+      const appAmount = Math.min(1, Math.max(0, phase - 0.3));
+      const siteAmount = Math.min(1, Math.max(0, phase - 1.15));
+      const launchAmount = Math.min(1, Math.max(0, phase - 2.1));
+
+      product.rotation.y = -0.45 + p * 0.95 + Math.sin(elapsed * 0.35) * 0.04;
+      product.rotation.x = 0.18 - p * 0.08;
+      product.position.x = 1.1;
+      product.position.y = Math.sin(elapsed * 0.55) * 0.08;
+
+      ideaBlock.scale.setScalar(1.15 - p * 0.45);
+      ideaBlock.rotation.y = elapsed * 0.35 + p * 1.4;
+      ideaBlock.position.x = -0.05 + p * 0.15;
+
+      appBody.position.x = -1.45 + appAmount * 0.2;
+      appBody.rotation.z = -0.15 + appAmount * 0.15;
+      appBody.scale.setScalar(0.82 + appAmount * 0.18);
+      appScreen.position.copy(appBody.position).add(new THREE.Vector3(0, 0, 0.17));
+      appScreen.rotation.copy(appBody.rotation);
+      appScreen.scale.copy(appBody.scale);
+
+      siteBody.position.x = 1.4 - siteAmount * 0.18;
+      siteBody.rotation.z = 0.12 - siteAmount * 0.12;
+      siteBody.scale.setScalar(0.82 + siteAmount * 0.18);
+      siteScreen.position.copy(siteBody.position).add(new THREE.Vector3(0, -0.09, 0.17));
+      siteScreen.rotation.copy(siteBody.rotation);
+      siteScreen.scale.copy(siteBody.scale);
+      headerLine.position.x = siteBody.position.x - 0.06;
+      headerLine.position.y = siteBody.position.y + 0.52;
+      headerLine.position.z = siteBody.position.z + 0.28;
+      ctaLine.position.x = siteBody.position.x - 0.72;
+      ctaLine.position.y = siteBody.position.y - 0.62;
+      ctaLine.position.z = siteBody.position.z + 0.29;
+
+      chips.forEach((chip, index) => {
+        const angle = elapsed * (0.28 + launchAmount * 0.32) + index * 0.62;
+        const radius = 2.1 - p * 0.45 + (index % 4) * 0.08;
+        chip.position.x = Math.cos(angle) * radius;
+        chip.position.y = Math.sin(angle * 0.8) * (1.0 + launchAmount * 0.4);
+        chip.position.z = -0.75 + Math.sin(angle + index) * 0.5;
+        chip.scale.setScalar(0.62 + launchAmount * 0.55);
+      });
+
+      renderer.render(scene, camera);
+      frameId = window.requestAnimationFrame(render);
+    };
+
+    sceneStateRef.current = { renderer, scene };
+    resize();
+    updateScroll();
+    window.addEventListener("resize", resize);
+    window.addEventListener("scroll", updateScroll, { passive: true });
+    frameId = window.requestAnimationFrame(render);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("scroll", updateScroll);
+      window.cancelAnimationFrame(frameId);
+      product.traverse((object) => {
+        if (object.geometry) object.geometry.dispose();
+      });
+      Object.values(material).forEach((mat) => mat.dispose());
+      renderer.dispose();
+      sceneStateRef.current = null;
+    };
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="relative min-h-[360vh] border-y border-white/10 bg-black">
+      <div className="sticky top-0 z-10 h-screen overflow-hidden">
+        <canvas ref={canvasRef} className="absolute inset-0 z-0 h-full w-full" aria-label="Scroll-driven 3D product build visualization" />
+        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_61%_45%,rgba(56,189,248,0.18),transparent_34%),linear-gradient(90deg,rgba(0,0,0,0.82),rgba(0,0,0,0.12)_33%,rgba(0,0,0,0.28)_62%,rgba(0,0,0,0.78))]" />
+        <div className="absolute left-5 top-28 z-20 max-w-lg lg:left-[max(2rem,calc((100vw-80rem)/2))] lg:top-32">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-sky-300">Scroll Build</p>
+          <h2 className="text-3xl font-semibold leading-tight text-white sm:text-5xl">Watch the idea become the product.</h2>
+          <p className="mt-5 max-w-lg text-base leading-7 text-neutral-400 sm:text-lg">
+            The object changes as you scroll through the same path clients take with PDS: rough concept, clear plan, working build, launch-ready product.
+          </p>
+        </div>
+        <div className="absolute bottom-8 left-5 right-5 z-20 lg:left-auto lg:right-[max(2rem,calc((100vw-80rem)/2))] lg:w-[28rem]">
+          <div className="border-l border-white/14 pl-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-sky-300">{scrollStages[activeStage].step}</p>
+            <h3 className="mt-3 text-3xl font-semibold text-white">{scrollStages[activeStage].title}</h3>
+            <p className="mt-3 leading-7 text-neutral-350">{scrollStages[activeStage].text}</p>
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">{scrollStages[activeStage].label}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Services() {
   return (
     <section id="services" className="px-5 py-24 lg:px-8 lg:py-32">
@@ -647,10 +859,11 @@ function Footer() {
 
 function App() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-black text-white">
+    <main className="min-h-screen bg-black text-white">
       <Background />
       <Navbar />
       <Hero />
+      <ProductScrollScene />
       <Services />
       <FeaturedProjects />
       <Process />
