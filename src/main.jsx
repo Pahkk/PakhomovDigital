@@ -73,7 +73,9 @@ const projects = [
     tags: ["Mobile", "Consumer", "Food"],
     logo: plattrLogo,
     logoAlt: "Plattr logo",
-    logoClass: "scale-[1.16]"
+    logoClass: "scale-[1.16]",
+    client: "Kenneth B.",
+    story: "Kenneth wanted to make choosing where to eat feel simpler and more personal. PDS helped shape that idea into a focused mobile experience built around less scrolling and better taste-fit."
   },
   {
     name: "ReadProof",
@@ -81,7 +83,9 @@ const projects = [
     text: "An AI reading accountability app that verifies reading progress and turns consistency into visible proof.",
     tags: ["App", "Verification", "Progress"],
     logo: readProofLogo,
-    logoAlt: "ReadProof logo"
+    logoAlt: "ReadProof logo",
+    client: "Ryan M.",
+    story: "Ryan wanted readers to stay accountable and show real progress. PDS helped turn that into a product direction for capture, verification, streaks, and a polished iOS-ready experience."
   },
   {
     name: "Custom Business Apps",
@@ -94,23 +98,6 @@ const projects = [
     type: "Website Systems",
     text: "Premium websites and funnels built to explain the offer clearly, capture leads, and make the business feel serious.",
     tags: ["Website", "Funnel", "Conversion"]
-  }
-];
-
-const clientStories = [
-  {
-    name: "Kenneth B.",
-    product: "Plattr",
-    story: "Kenneth wanted to make the everyday question of where to eat feel simpler and more personal. PDS helped shape that idea into Plattr: a focused food-decision app built around less scrolling, better taste-fit, and a clear mobile experience.",
-    logo: plattrLogo,
-    logoAlt: "Plattr logo"
-  },
-  {
-    name: "Ryan M.",
-    product: "ReadProof",
-    story: "Ryan wanted a better way for readers to stay accountable and show real progress. PDS helped turn that into ReadProof: a product direction that combines reading capture, verification, streaks, and a polished iOS-ready experience.",
-    logo: readProofLogo,
-    logoAlt: "ReadProof logo"
   }
 ];
 
@@ -387,7 +374,7 @@ function FeaturedProjects() {
         <div className="mt-14 grid gap-4 md:grid-cols-2">
           {projects.slice(0, 2).map((project, index) => (
             <Reveal key={project.name} delay={index * 0.06}>
-              <article className="group relative min-h-[30rem] overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 transition duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06]">
+              <article className="group relative flex min-h-[34rem] flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 transition duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06]">
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
                 {project.logo && (
                   <div className="mb-8 flex h-36 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white/[0.04] p-3">
@@ -401,7 +388,11 @@ function FeaturedProjects() {
                   </div>
                 </div>
                 <p className="mt-6 max-w-xl leading-8 text-neutral-400">{project.text}</p>
-                <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-2">
+                <div className="mt-6 border-t border-white/10 pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">Client story / {project.client}</p>
+                  <p className="mt-3 text-sm leading-6 text-neutral-300">{project.story}</p>
+                </div>
+                <div className="mt-auto flex flex-wrap gap-2 pt-6">
                   {project.tags.map((tag) => (
                     <span key={tag} className="rounded-md border border-white/10 bg-black/40 px-3 py-1 text-xs font-medium text-neutral-300">
                       {tag}
@@ -413,34 +404,53 @@ function FeaturedProjects() {
           ))}
         </div>
 
-        <div className="mt-10 border-t border-white/10 pt-10">
-          <Reveal>
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-sky-300">Testimonials</p>
-              <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">What clients came to PDS to build.</h3>
-            </div>
-          </Reveal>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {clientStories.map((client, index) => (
-              <Reveal key={client.product} delay={index * 0.08}>
-                <article className="h-full rounded-lg border border-white/10 bg-white/[0.035] p-6 sm:p-7">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white p-1.5">
-                      <img src={client.logo} alt={client.logoAlt} className="h-full w-full object-contain" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white">{client.name}</p>
-                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-sky-300">{client.product}</p>
-                    </div>
-                  </div>
-                  <p className="mt-7 text-lg leading-8 text-neutral-400">{client.story}</p>
-                </article>
-              </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function WebsiteDemo({ option, onStartProject }) {
+  const [page, setPage] = useState("Home");
+  const accentClass = option.accent === "sky" ? "bg-sky-300 text-black" : "bg-violet-300 text-black";
+  const activeClass = option.accent === "sky" ? "text-sky-200" : "text-violet-200";
+
+  return (
+    <div className="rounded-md border border-white/10 bg-black/45 p-3 sm:p-4">
+      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="flex gap-1.5"><span className="h-2 w-2 rounded-full bg-red-400/80" /><span className="h-2 w-2 rounded-full bg-yellow-300/80" /><span className="h-2 w-2 rounded-full bg-emerald-300/80" /></div>
+        <span className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-neutral-500">Interactive preview</span>
+      </div>
+      <div className={`mt-4 min-h-[19rem] rounded-sm border border-white/10 p-5 ${option.accent === "sky" ? "bg-sky-300/[0.09]" : "bg-violet-300/[0.09]"}`}>
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-xs font-bold tracking-[0.16em] text-white">{option.brand}</span>
+          <div className="flex gap-3">
+            {["Home", "Services", "Contact"].map((item) => (
+              <button key={item} type="button" onClick={() => setPage(item)} className={`text-[0.62rem] font-semibold transition ${page === item ? activeClass : "text-neutral-500 hover:text-white"}`}>{item}</button>
             ))}
           </div>
         </div>
+        {page === "Home" && (
+          <div className="mt-10 max-w-sm">
+            <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${activeClass}`}>Built for your next step</p>
+            <h4 className="mt-3 text-2xl font-semibold leading-tight text-white">{option.previewTitle}</h4>
+            <p className="mt-3 text-sm leading-6 text-neutral-300">{option.previewText}</p>
+            <button type="button" onClick={onStartProject} className={`mt-6 rounded-md px-4 py-2 text-xs font-bold ${accentClass}`}>{option.cta}</button>
+          </div>
+        )}
+        {page === "Services" && (
+          <div className="mt-8 grid grid-cols-2 gap-3">
+            {option.previewServices.map((service) => <div key={service} className="rounded-sm border border-white/10 bg-white/[0.06] p-3 text-xs font-medium text-neutral-200">{service}</div>)}
+          </div>
+        )}
+        {page === "Contact" && (
+          <div className="mt-8 max-w-sm rounded-sm border border-white/10 bg-black/25 p-4">
+            <p className="text-sm font-semibold text-white">Start a conversation.</p>
+            <div className="mt-4 space-y-2"><div className="h-8 rounded-sm bg-white/[0.08]" /><div className="h-8 rounded-sm bg-white/[0.08]" /><div className="h-12 rounded-sm bg-white/[0.08]" /></div>
+            <button type="button" onClick={onStartProject} className={`mt-4 rounded-md px-4 py-2 text-xs font-bold ${accentClass}`}>Request a Quote</button>
+          </div>
+        )}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -451,14 +461,24 @@ function WebsiteShowcase({ onStartProject }) {
       title: "Make your business easy to trust.",
       text: "A clean, focused website for businesses that need to explain their offer, show proof, and turn visitors into real inquiries.",
       features: ["Clear service and offer pages", "Lead capture or booking flow", "Mobile-first responsive design", "Basic SEO and launch setup"],
-      accent: "sky"
+      accent: "sky",
+      brand: "NORTHLINE CO.",
+      previewTitle: "A clearer website for a growing business.",
+      previewText: "Explain what you do, show customers why you are the right choice, and make the next step simple.",
+      previewServices: ["Primary Service", "Customer Proof", "Simple Booking", "Contact Flow"],
+      cta: "Book a Consultation"
     },
     {
       eyebrow: "Product or Launch Website",
       title: "Give the new idea a place to land.",
       text: "A high-impact launch site for a new app, product, or service that makes the concept feel real before the full product is live.",
       features: ["Product positioning and page flow", "Waitlist or early-access form", "Conversion-focused landing page", "Analytics-ready launch setup"],
-      accent: "violet"
+      accent: "violet",
+      brand: "FIELDNOTE APP",
+      previewTitle: "Make the product idea feel real before launch.",
+      previewText: "Give early users a clear reason to care and an easy way to join the launch.",
+      previewServices: ["Product Story", "Feature Preview", "Early Access", "Launch Updates"],
+      cta: "Join the Waitlist"
     }
   ];
 
@@ -470,24 +490,7 @@ function WebsiteShowcase({ onStartProject }) {
           {websiteOptions.map((option, index) => (
             <Reveal key={option.title} delay={index * 0.08}>
               <article className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-5 sm:p-7">
-                <div className="rounded-md border border-white/10 bg-black/45 p-3 sm:p-4">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                    <div className="flex gap-1.5"><span className="h-2 w-2 rounded-full bg-red-400/80" /><span className="h-2 w-2 rounded-full bg-yellow-300/80" /><span className="h-2 w-2 rounded-full bg-emerald-300/80" /></div>
-                    <span className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-neutral-500">Website preview</span>
-                  </div>
-                  <div className={`mt-4 rounded-sm border border-white/10 p-5 ${option.accent === "sky" ? "bg-sky-300/[0.09]" : "bg-violet-300/[0.09]"}`}>
-                    <div className="flex items-center justify-between"><span className="text-xs font-bold tracking-[0.16em] text-white">YOUR BRAND</span><span className="h-2 w-12 rounded-full bg-white/20" /></div>
-                    <div className="mt-10 max-w-xs">
-                      <div className="h-6 w-full rounded-sm bg-white/90" />
-                      <div className="mt-3 h-3 w-4/5 rounded-sm bg-white/35" />
-                      <div className="mt-2 h-3 w-3/5 rounded-sm bg-white/20" />
-                      <div className={`mt-7 h-10 w-32 rounded-md ${option.accent === "sky" ? "bg-sky-300" : "bg-violet-300"}`} />
-                    </div>
-                    <div className="mt-9 grid grid-cols-3 gap-2">
-                      {[1, 2, 3].map((item) => <div key={item} className="h-16 rounded-sm border border-white/10 bg-white/[0.06]" />)}
-                    </div>
-                  </div>
-                </div>
+                <WebsiteDemo option={option} onStartProject={onStartProject} />
                 <p className="mt-7 text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">{option.eyebrow}</p>
                 <h3 className="mt-4 text-2xl font-semibold text-white sm:text-3xl">{option.title}</h3>
                 <p className="mt-4 leading-7 text-neutral-400">{option.text}</p>
