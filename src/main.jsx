@@ -97,6 +97,23 @@ const projects = [
   }
 ];
 
+const clientStories = [
+  {
+    name: "Kenneth B.",
+    product: "Plattr",
+    story: "Kenneth wanted to make the everyday question of where to eat feel simpler and more personal. PDS helped shape that idea into Plattr: a focused food-decision app built around less scrolling, better taste-fit, and a clear mobile experience.",
+    logo: plattrLogo,
+    logoAlt: "Plattr logo"
+  },
+  {
+    name: "Ryan M.",
+    product: "ReadProof",
+    story: "Ryan wanted a better way for readers to stay accountable and show real progress. PDS helped turn that into ReadProof: a product direction that combines reading capture, verification, streaks, and a polished iOS-ready experience.",
+    logo: readProofLogo,
+    logoAlt: "ReadProof logo"
+  }
+];
+
 const process = [
   ["01", "Bring the Need", "You come with an app idea, a business problem, or a website that no longer reflects where the business is going."],
   ["02", "Shape the Product", "We turn it into a clear scope, screen plan, user flow, feature list, and launch direction."],
@@ -394,6 +411,33 @@ function FeaturedProjects() {
               </article>
             </Reveal>
           ))}
+        </div>
+
+        <div className="mt-16 border-t border-white/10 pt-12">
+          <Reveal>
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-sky-300">Client stories</p>
+              <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">The idea behind the product matters.</h3>
+            </div>
+          </Reveal>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {clientStories.map((client, index) => (
+              <Reveal key={client.product} delay={index * 0.08}>
+                <article className="h-full rounded-lg border border-white/10 bg-white/[0.62] p-6 sm:p-7">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white p-1.5">
+                      <img src={client.logo} alt={client.logoAlt} className="h-full w-full object-contain" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">{client.name}</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-sky-300">{client.product}</p>
+                    </div>
+                  </div>
+                  <p className="mt-7 text-lg leading-8 text-neutral-400">{client.story}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>
