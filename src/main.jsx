@@ -254,100 +254,97 @@ function Background() {
 }
 
 function HeroVisual() {
+  const [comparison, setComparison] = useState(52);
+
+  const updateComparison = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const next = ((event.clientX - bounds.left) / bounds.width) * 100;
+    setComparison(Math.min(100, Math.max(0, next)));
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-      className="relative min-h-[520px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.025] p-4 shadow-[0_40px_120px_rgba(0,0,0,0.35)] sm:min-h-[560px] sm:p-5 lg:min-h-[540px]"
+      className="relative overflow-hidden rounded-lg border border-white/10 bg-white/[0.025] p-4 shadow-[0_40px_120px_rgba(0,0,0,0.35)] sm:p-5"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_20%,rgba(125,211,252,0.12),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(255,255,255,0.055),transparent_34%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:42px_42px] opacity-35" />
 
-      <motion.div
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="relative ml-auto w-full max-w-[33rem] rounded-lg border border-white/12 bg-neutral-950/88 p-3 shadow-[0_30px_90px_rgba(0,0,0,0.38)] backdrop-blur-xl"
-      >
-        <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-3">
-          <div className="flex gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
-            <span className="h-2.5 w-2.5 rounded-full bg-yellow-300/70" />
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-300/70" />
-          </div>
-          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-neutral-500">Website Build</p>
+      <div className="relative z-10">
+        <div className="mb-5 flex items-center justify-between">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">From concept to product</p>
+          <p className="text-xs font-medium text-neutral-500">Move the divider</p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-md border border-white/10 bg-black/52 p-4">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-sky-300">Landing Page</p>
-            <div className="mt-5 h-5 w-4/5 rounded-sm bg-white/90" />
-            <div className="mt-3 h-3 w-3/5 rounded-sm bg-white/35" />
-            <div className="mt-2 h-3 w-2/3 rounded-sm bg-white/20" />
-            <div className="mt-6 grid grid-cols-3 gap-2">
-              {[72, 58, 84].map((height, index) => (
-                <div key={height} className="rounded-sm border border-white/10 bg-white/[0.04] p-2">
-                  <div className="h-2 w-8 rounded-sm bg-sky-300/70" />
-                  <div className="mt-8 rounded-sm bg-white/18" style={{ height }} />
-                  <p className="mt-2 text-[0.58rem] text-neutral-500">0{index + 1}</p>
+        <div
+          className="relative aspect-[0.94] overflow-hidden rounded-md border border-white/10 bg-neutral-950 shadow-[0_28px_80px_rgba(0,0,0,0.35)] sm:aspect-[1.1]"
+          onPointerMove={updateComparison}
+        >
+          <div className="absolute inset-0 bg-neutral-900 p-5 sm:p-7">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <span className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">Before</span>
+              <span className="text-xs text-neutral-600">Rough concept</span>
+            </div>
+            <div className="mt-8 grid gap-4">
+              <div className="h-4 w-3/4 rounded-sm bg-white/15" />
+              <div className="h-3 w-full rounded-sm bg-white/8" />
+              <div className="h-3 w-4/5 rounded-sm bg-white/8" />
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                {["Profile", "Bookings", "Payments", "Messages"].map((item) => (
+                  <div key={item} className="h-24 rounded-md border border-dashed border-white/15 bg-white/[0.02] p-3 text-xs text-neutral-600">
+                    {item}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 h-12 rounded-md border border-dashed border-white/15 bg-white/[0.02]" />
+            </div>
+          </div>
+
+          <div className="absolute inset-0 overflow-hidden" style={{ clipPath: `inset(0 ${100 - comparison}% 0 0)` }}>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_12%,rgba(56,189,248,0.26),transparent_36%),#0b1220] p-5 sm:p-7">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <span className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">After</span>
+                <span className="rounded-full bg-sky-300/15 px-2 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-sky-100">Ready to launch</span>
+              </div>
+              <div className="mt-7 flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-medium text-sky-200">Welcome back</p>
+                  <h3 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">Your business, in one place.</h3>
                 </div>
-              ))}
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-sky-300 text-black"><Smartphone className="h-5 w-5" /></span>
+              </div>
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                {[
+                  ["24", "New leads"],
+                  ["08", "Bookings today"]
+                ].map(([number, label]) => (
+                  <div key={label} className="rounded-md border border-white/10 bg-white/[0.07] p-4 backdrop-blur-sm">
+                    <p className="text-2xl font-semibold text-white">{number}</p>
+                    <p className="mt-1 text-xs text-neutral-400">{label}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 rounded-md border border-sky-300/25 bg-sky-300/[0.08] p-4">
+                <p className="text-sm font-semibold text-white">Everything is connected.</p>
+                <p className="mt-2 text-xs leading-5 text-sky-100/70">Clear screens, customer flow, and a product people can actually use.</p>
+              </div>
             </div>
           </div>
-          <div className="grid gap-3">
-            {[
-              ["Lead Form", "Connected"],
-              ["SEO", "Structured"],
-              ["Analytics", "Live"]
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-md border border-white/10 bg-white/[0.035] p-3">
-                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-neutral-500">{label}</p>
-                <p className="mt-2 text-sm font-medium text-white">{value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
 
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-5 left-5 w-[13rem] rounded-[1.6rem] border border-white/12 bg-black/82 p-3 shadow-[0_28px_70px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:bottom-7 sm:left-7 sm:w-[15rem]"
-      >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/20" />
-        <div className="rounded-[1.1rem] border border-white/10 bg-white/[0.035] p-4">
-          <div className="flex items-center justify-between">
-            <Smartphone className="h-5 w-5 text-sky-300" />
-            <span className="rounded-full bg-emerald-300/12 px-2 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-emerald-200">Live</span>
+          <div className="pointer-events-none absolute inset-y-0 z-20 w-px bg-white" style={{ left: `${comparison}%` }}>
+            <span className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-black text-xs font-bold text-white shadow-xl">||</span>
           </div>
-          <p className="mt-6 text-xl font-semibold leading-tight text-white">Client App</p>
-          <p className="mt-2 text-xs leading-5 text-neutral-400">Accounts, booking, payments, notifications.</p>
-          <div className="mt-5 space-y-2">
-            {["Onboarding", "Dashboard", "Checkout"].map((item, index) => (
-              <div key={item} className="flex items-center justify-between rounded-md bg-white/[0.045] px-3 py-2">
-                <span className="text-xs text-neutral-300">{item}</span>
-                <span className="text-xs font-semibold text-sky-300">{index + 1}</span>
-              </div>
-            ))}
-          </div>
+          <input
+            aria-label="Compare rough concept and polished product"
+            className="comparison-range absolute inset-0 z-30 h-full w-full cursor-ew-resize opacity-0"
+            type="range"
+            min="0"
+            max="100"
+            value={comparison}
+            onChange={(event) => setComparison(Number(event.target.value))}
+          />
         </div>
-      </motion.div>
-
-      <div className="absolute bottom-5 right-5 hidden w-[12.5rem] gap-2 sm:bottom-7 sm:right-7 sm:grid">
-        {[
-          ["Scope", "Approved", AppWindow],
-          ["Website", "In QA", Globe2],
-          ["Launch", "Ready", Database]
-        ].map(([label, value, Icon]) => (
-          <div key={label} className="flex items-center gap-3 rounded-lg border border-white/10 bg-black/58 p-3 backdrop-blur-xl">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/10 text-sky-200">
-              <Icon className="h-4 w-4" />
-            </span>
-            <div>
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-neutral-500">{label}</p>
-              <p className="mt-1 text-sm font-medium text-white">{value}</p>
-            </div>
-          </div>
-        ))}
       </div>
     </motion.div>
   );
@@ -458,9 +455,6 @@ function FeaturedProjects() {
                     <p className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-300">{project.type}</p>
                     <h3 className="mt-4 text-3xl font-semibold text-white">{project.name}</h3>
                   </div>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-neutral-300 transition group-hover:border-sky-300/40 group-hover:text-sky-200">
-                    <ArrowRight className="h-5 w-5 -rotate-45" />
-                  </span>
                 </div>
                 <p className="mt-6 max-w-xl leading-8 text-neutral-400">{project.text}</p>
                 <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-2">
