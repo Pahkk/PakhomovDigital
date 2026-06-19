@@ -416,8 +416,8 @@ function FeaturedProjects() {
         <div className="mt-16 border-t border-white/10 pt-12">
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-sky-300">Client stories</p>
-              <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">The idea behind the product matters.</h3>
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-sky-300">Testimonials</p>
+              <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">What clients came to PDS to build.</h3>
             </div>
           </Reveal>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
