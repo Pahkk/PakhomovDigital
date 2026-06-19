@@ -156,7 +156,7 @@ function Wordmark({ compact = false }) {
   );
 }
 
-function Button({ children, variant = "primary", onClick, className = "" }) {
+function Button({ children, variant = "primary", onClick, className = "", type = "button", disabled = false }) {
   const variantClass =
     variant === "primary"
       ? "border-white bg-white text-black hover:border-sky-300 hover:bg-sky-200"
@@ -164,8 +164,10 @@ function Button({ children, variant = "primary", onClick, className = "" }) {
 
   return (
     <button
+      type={type}
       onClick={onClick}
-      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border px-5 py-3 text-sm font-semibold transition duration-300 hover:-translate-y-0.5 ${variantClass} ${className}`}
+      disabled={disabled}
+      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border px-5 py-3 text-sm font-semibold transition duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:translate-y-0 ${variantClass} ${className}`}
     >
       {children}
     </button>
@@ -184,7 +186,7 @@ function SectionHeader({ eyebrow, title, text, align = "center" }) {
   );
 }
 
-function Navbar() {
+function Navbar({ onStartProject }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -214,7 +216,7 @@ function Navbar() {
         </div>
 
         <div className="hidden lg:block">
-          <Button onClick={() => goTo("contact")}>
+          <Button onClick={onStartProject}>
             Start a Project <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
@@ -235,7 +237,7 @@ function Navbar() {
               {label}
             </button>
           ))}
-          <Button onClick={() => goTo("contact")} className="mt-2 w-full">
+          <Button onClick={onStartProject} className="mt-2 w-full">
             Start a Project <ArrowRight className="h-4 w-4" />
           </Button>
         </motion.div>
@@ -275,7 +277,7 @@ function HeroVisual() {
   );
 }
 
-function Hero() {
+function Hero({ onStartProject }) {
   return (
     <section id="home" className="relative overflow-hidden px-5 pb-[4.5rem] pt-32 lg:min-h-[820px] lg:px-8 lg:pb-[4.5rem] lg:pt-[8.5rem]">
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.08fr_0.92fr]">
@@ -295,7 +297,7 @@ function Hero() {
             Pahk Development Studios helps small businesses, creators, and everyday people turn rough ideas into polished apps, websites, MVPs, and launch-ready digital products.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.36 }} className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Button onClick={() => scrollToId("contact")} className="sm:min-w-44">
+            <Button onClick={onStartProject} className="sm:min-w-44">
               Start a Project <ArrowRight className="h-5 w-5" />
             </Button>
             <Button variant="secondary" onClick={() => scrollToId("work")} className="sm:min-w-40">
@@ -423,7 +425,7 @@ function Process() {
   );
 }
 
-function Pricing() {
+function Pricing({ onStartProject }) {
   return (
     <section id="pricing" className="px-5 py-24 lg:px-8 lg:py-32">
       <div className="mx-auto max-w-7xl">
@@ -436,7 +438,7 @@ function Pricing() {
                 <h3 className="text-2xl font-semibold text-white">{tier.name}</h3>
                 <p className="mt-5 text-4xl font-semibold text-white">{tier.price}</p>
                 <p className="mt-4 leading-7 text-neutral-400">{tier.detail}</p>
-                <Button onClick={() => scrollToId("contact")} variant={tier.featured ? "primary" : "secondary"} className="mt-8 w-full">
+                <Button onClick={onStartProject} variant={tier.featured ? "primary" : "secondary"} className="mt-8 w-full">
                   Request Scope
                 </Button>
                 <div className="my-7 h-px bg-white/10" />
@@ -576,19 +578,159 @@ function Footer() {
   );
 }
 
+const intakeSteps = [
+  {
+    title: "What are you looking to build?",
+    text: "Choose the closest fit. You can clarify the details in the next step.",
+    field: "projectType",
+    options: ["Mobile app", "Web app or portal", "Business website", "MVP or SaaS product", "Not sure yet"]
+  },
+  {
+    title: "What should the product help you do?",
+    text: "Pick the main outcome you want to create.",
+    field: "goal",
+    options: ["Get more customers", "Make a manual process easier", "Launch a new business idea", "Give customers an online experience", "Build an internal tool"]
+  },
+  {
+    title: "What is your working budget?",
+    text: "A range helps us recommend a realistic first version.",
+    field: "budget",
+    options: ["Under $2,500", "$2,500 - $7,500", "$7,500 - $20,000", "$20,000+", "I need help defining scope"]
+  }
+];
+
+function ProjectOnboarding({ open, onClose }) {
+  const [step, setStep] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const [answers, setAnswers] = useState({ projectType: "", goal: "", budget: "", name: "", email: "", details: "" });
+  const totalSteps = intakeSteps.length + 1;
+  const current = intakeSteps[step];
+  const isContactStep = step === intakeSteps.length;
+
+  if (!open) return null;
+
+  const closeAndReset = () => {
+    setStep(0);
+    setSubmitted(false);
+    setAnswers({ projectType: "", goal: "", budget: "", name: "", email: "", details: "" });
+    onClose();
+  };
+
+  const next = () => {
+    if (!isContactStep && answers[current.field]) setStep((value) => value + 1);
+  };
+
+  const submit = (event) => {
+    event.preventDefault();
+    if (answers.name.trim() && answers.email.trim()) setSubmitted(true);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-end bg-black/80 p-3 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeAndReset()}>
+      <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-intake-title"
+        initial={{ opacity: 0, y: 24, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-2xl overflow-hidden rounded-lg border border-white/12 bg-neutral-950 shadow-2xl"
+      >
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 sm:px-7">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">Project intake</p>
+            <p className="mt-1 text-sm text-neutral-500">A few questions before we scope your quote.</p>
+          </div>
+          <button type="button" onClick={closeAndReset} aria-label="Close project intake" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-neutral-400 transition hover:border-white/30 hover:text-white">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {submitted ? (
+          <div className="px-5 py-14 text-center sm:px-10">
+            <span className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-sky-300/30 bg-sky-300/10 text-sky-200">
+              <Check className="h-7 w-7" />
+            </span>
+            <h2 id="project-intake-title" className="mt-6 text-3xl font-semibold text-white">Quote request received.</h2>
+            <p className="mx-auto mt-4 max-w-md leading-7 text-neutral-400">Thanks, {answers.name}. We have the basics for your {answers.projectType.toLowerCase()} project and will follow up about the next step.</p>
+            <Button onClick={closeAndReset} className="mt-8">Close</Button>
+          </div>
+        ) : (
+          <form onSubmit={submit}>
+            <div className="px-5 pt-6 sm:px-7 sm:pt-8">
+              <div className="mb-8 flex items-center justify-between gap-5">
+                <p className="text-sm font-medium text-neutral-300">Step {step + 1} of {totalSteps}</p>
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10" aria-label={`Progress: step ${step + 1} of ${totalSteps}`}>
+                  <div className="h-full rounded-full bg-sky-300 transition-all duration-300" style={{ width: `${((step + 1) / totalSteps) * 100}%` }} />
+                </div>
+              </div>
+
+              {!isContactStep ? (
+                <div>
+                  <h2 id="project-intake-title" className="text-2xl font-semibold text-white sm:text-3xl">{current.title}</h2>
+                  <p className="mt-3 leading-7 text-neutral-400">{current.text}</p>
+                  <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                    {current.options.map((option) => {
+                      const selected = answers[current.field] === option;
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => setAnswers((value) => ({ ...value, [current.field]: option }))}
+                          className={`min-h-16 rounded-lg border px-4 py-3 text-left text-sm font-medium transition ${selected ? "border-sky-300 bg-sky-300/10 text-white" : "border-white/10 bg-white/[0.03] text-neutral-300 hover:border-white/30 hover:bg-white/[0.06]"}`}
+                        >
+                          {option}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <h2 id="project-intake-title" className="text-2xl font-semibold text-white sm:text-3xl">Where should we send your quote?</h2>
+                  <p className="mt-3 leading-7 text-neutral-400">Add your details and any context that will help us prepare for the conversation.</p>
+                  <div className="mt-7 grid gap-4 sm:grid-cols-2">
+                    <input required className="field" value={answers.name} onChange={(event) => setAnswers((value) => ({ ...value, name: event.target.value }))} placeholder="Name" aria-label="Name" />
+                    <input required className="field" type="email" value={answers.email} onChange={(event) => setAnswers((value) => ({ ...value, email: event.target.value }))} placeholder="Email" aria-label="Email" />
+                    <textarea className="field min-h-32 resize-none sm:col-span-2" value={answers.details} onChange={(event) => setAnswers((value) => ({ ...value, details: event.target.value }))} placeholder="Tell us a little more about the idea (optional)" aria-label="Project details" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-10 flex items-center justify-between border-t border-white/10 px-5 py-4 sm:px-7">
+              <button type="button" onClick={() => setStep((value) => Math.max(0, value - 1))} disabled={step === 0} className="min-h-11 px-2 text-sm font-semibold text-neutral-400 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-0">
+                Back
+              </button>
+              {isContactStep ? (
+                <Button className="min-w-40">Request Quote <ArrowRight className="h-4 w-4" /></Button>
+              ) : (
+                <Button type="button" onClick={next} className="min-w-32" disabled={!answers[current.field]}>Continue <ArrowRight className="h-4 w-4" /></Button>
+              )}
+            </div>
+          </form>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
 function App() {
+  const [intakeOpen, setIntakeOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-black text-white">
       <Background />
-      <Navbar />
-      <Hero />
+      <Navbar onStartProject={() => setIntakeOpen(true)} />
+      <Hero onStartProject={() => setIntakeOpen(true)} />
       <Services />
       <FeaturedProjects />
       <Process />
-      <Pricing />
+      <Pricing onStartProject={() => setIntakeOpen(true)} />
       <About />
       <Contact />
       <Footer />
+      <ProjectOnboarding open={intakeOpen} onClose={() => setIntakeOpen(false)} />
     </main>
   );
 }
