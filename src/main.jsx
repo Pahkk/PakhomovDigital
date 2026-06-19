@@ -28,6 +28,7 @@ const companyName = "Pahk Development Studios";
 const navLinks = [
   ["Services", "services"],
   ["Growth", "growth"],
+  ["Planner", "calculator"],
   ["Work", "work"],
   ["Process", "process"],
   ["Pricing", "pricing"],
@@ -88,6 +89,33 @@ const growthSystems = [
     icon: MapPinned
   }
 ];
+
+const calculatorPlans = {
+  website: {
+    name: "Business Website",
+    price: 2500,
+    conversionRate: 0.025,
+    includes: "Responsive website, core pages, lead capture, launch setup"
+  },
+  app: {
+    name: "App MVP",
+    price: 7500,
+    conversionRate: 0.04,
+    includes: "Product scope, interface design, core app build, launch support"
+  }
+};
+
+const calculatorFeatures = [
+  { id: "seo", name: "SEO Foundation", description: "Local pages, search structure, and technical SEO basics.", price: 750, trafficLift: 0.18, conversionLift: 0 },
+  { id: "lead", name: "Lead Capture & CRM", description: "Quote forms, booking paths, and a clearer lead handoff.", price: 650, trafficLift: 0, conversionLift: 0.12 },
+  { id: "automation", name: "Automation & Follow-Up", description: "Lead replies, quote workflows, reminders, and review requests.", price: 1200, trafficLift: 0, conversionLift: 0.16 },
+  { id: "assistant", name: "AI Website Assistant", description: "Visitor guidance, common questions, lead qualification, and action prompts.", price: 2000, trafficLift: 0, conversionLift: 0.1 },
+  { id: "ads", name: "Ads Landing & Tracking", description: "Campaign-ready landing page, conversion tracking, and ad destination setup.", price: 1100, trafficLift: 0.28, conversionLift: 0.08 },
+  { id: "marketing", name: "Growth Marketing Setup", description: "Offer positioning, launch messaging, and a practical customer-acquisition plan.", price: 1500, trafficLift: 0.12, conversionLift: 0.1 },
+  { id: "local", name: "Local Growth Setup", description: "Google Business profile, local landing pages, reviews, and local SEO structure.", price: 1250, trafficLift: 0.2, conversionLift: 0.06 }
+];
+
+const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
 const projects = [
   {
@@ -403,6 +431,111 @@ function GrowthSystems({ onStartProject }) {
         <Reveal delay={0.18} className="mt-10 flex justify-center">
           <Button onClick={onStartProject} className="min-w-56">Build My Growth System <ArrowRight className="h-5 w-5" /></Button>
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function GrowthCalculator({ onStartProject }) {
+  const [basePlan, setBasePlan] = useState("website");
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
+  const [monthlyVisitors, setMonthlyVisitors] = useState(1000);
+  const [customerValue, setCustomerValue] = useState(500);
+  const plan = calculatorPlans[basePlan];
+  const selected = calculatorFeatures.filter((feature) => selectedFeatures.includes(feature.id));
+  const addOnCost = selected.reduce((total, feature) => total + feature.price, 0);
+  const trafficLift = selected.reduce((total, feature) => total + feature.trafficLift, 0);
+  const conversionLift = selected.reduce((total, feature) => total + feature.conversionLift, 0);
+  const baselineLeads = Math.max(1, Math.round(monthlyVisitors * plan.conversionRate));
+  const projectedVisitors = Math.round(monthlyVisitors * (1 + trafficLift));
+  const projectedLeads = Math.max(1, Math.round(projectedVisitors * plan.conversionRate * (1 + conversionLift)));
+  const addedLeads = Math.max(0, projectedLeads - baselineLeads);
+  const projectedRevenue = projectedLeads * customerValue;
+
+  const toggleFeature = (id) => {
+    setSelectedFeatures((current) => current.includes(id) ? current.filter((feature) => feature !== id) : [...current, id]);
+  };
+
+  return (
+    <section id="calculator" className="px-5 py-24 lg:px-8 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="Growth Planner" title="Build the system your business actually needs" text="Start with a website or app, add the systems that support growth, and see a planning-level investment and impact model before we scope the final build." />
+        <div className="mt-14 grid gap-5 lg:grid-cols-[1.18fr_0.82fr]">
+          <div className="rounded-lg border border-white/10 bg-white/[0.035] p-5 sm:p-7">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-sky-300">01 / Base build</p>
+                <h3 className="mt-3 text-2xl font-semibold text-white">Choose your foundation.</h3>
+              </div>
+              <p className="text-sm text-neutral-500">One-time project estimate</p>
+            </div>
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              {Object.entries(calculatorPlans).map(([id, option]) => {
+                const selectedPlan = basePlan === id;
+                return (
+                  <button key={id} type="button" onClick={() => setBasePlan(id)} className={`rounded-lg border p-5 text-left transition ${selectedPlan ? "border-sky-300 bg-sky-300/[0.1]" : "border-white/10 bg-black/25 hover:border-white/30"}`}>
+                    <p className="text-xl font-semibold text-white">{option.name}</p>
+                    <p className="mt-2 text-2xl font-semibold text-sky-200">{money.format(option.price)}</p>
+                    <p className="mt-3 text-sm leading-6 text-neutral-400">{option.includes}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-10 border-t border-white/10 pt-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-sky-300">02 / Add growth systems</p>
+              <h3 className="mt-3 text-2xl font-semibold text-white">Select what should work alongside it.</h3>
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                {calculatorFeatures.map((feature) => {
+                  const active = selectedFeatures.includes(feature.id);
+                  return (
+                    <label key={feature.id} className={`flex cursor-pointer gap-3 rounded-lg border p-4 transition ${active ? "border-sky-300/60 bg-sky-300/[0.09]" : "border-white/10 bg-black/20 hover:border-white/30"}`}>
+                      <input type="checkbox" checked={active} onChange={() => toggleFeature(feature.id)} className="mt-1 h-4 w-4 accent-sky-300" />
+                      <span className="min-w-0 flex-1">
+                        <span className="flex items-start justify-between gap-3"><span className="font-semibold text-white">{feature.name}</span><span className="shrink-0 text-sm font-semibold text-sky-200">+{money.format(feature.price)}</span></span>
+                        <span className="mt-2 block text-sm leading-6 text-neutral-400">{feature.description}</span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-10 border-t border-white/10 pt-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-sky-300">03 / Planning inputs</p>
+              <div className="mt-5 grid gap-6 sm:grid-cols-2">
+                <label className="block">
+                  <span className="text-sm font-semibold text-white">Monthly website visitors</span>
+                  <div className="mt-3 flex items-center gap-3"><input type="range" min="100" max="10000" step="100" value={monthlyVisitors} onChange={(event) => setMonthlyVisitors(Number(event.target.value))} className="h-2 flex-1 accent-sky-300" /><input type="number" min="100" step="100" value={monthlyVisitors} onChange={(event) => setMonthlyVisitors(Math.max(100, Number(event.target.value) || 100))} className="field w-28 py-2 text-sm" aria-label="Monthly website visitors" /></div>
+                </label>
+                <label className="block">
+                  <span className="text-sm font-semibold text-white">Average customer value</span>
+                  <div className="mt-3 flex items-center gap-3"><input type="range" min="50" max="5000" step="50" value={customerValue} onChange={(event) => setCustomerValue(Number(event.target.value))} className="h-2 flex-1 accent-sky-300" /><input type="number" min="50" step="50" value={customerValue} onChange={(event) => setCustomerValue(Math.max(50, Number(event.target.value) || 50))} className="field w-28 py-2 text-sm" aria-label="Average customer value" /></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <aside className="h-fit rounded-lg border border-sky-300/30 bg-sky-300/[0.07] p-5 shadow-[0_30px_90px_rgba(14,165,233,0.09)] sm:sticky sm:top-28 sm:p-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-200">Your growth system</p>
+            <h3 className="mt-4 text-3xl font-semibold text-white">{plan.name}</h3>
+            <div className="mt-7 border-y border-white/10 py-6">
+              <p className="text-sm text-neutral-400">Estimated project investment</p>
+              <p className="mt-2 text-4xl font-semibold text-white">{money.format(plan.price + addOnCost)}</p>
+              <p className="mt-3 text-sm leading-6 text-neutral-400">{money.format(plan.price)} base build {addOnCost > 0 ? `+ ${money.format(addOnCost)} selected systems` : "with no add-ons selected"}.</p>
+            </div>
+            <div className="mt-7 grid grid-cols-2 gap-3">
+              <div className="rounded-md border border-white/10 bg-black/25 p-4"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">Baseline leads</p><p className="mt-2 text-2xl font-semibold text-white">{baselineLeads}/mo</p></div>
+              <div className="rounded-md border border-sky-300/25 bg-sky-300/[0.08] p-4"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-200">Projected leads</p><p className="mt-2 text-2xl font-semibold text-white">{projectedLeads}/mo</p></div>
+            </div>
+            <div className="mt-4 rounded-md border border-white/10 bg-black/25 p-4">
+              <p className="text-sm font-semibold text-white">Planning impact</p>
+              <p className="mt-2 text-sm leading-6 text-neutral-400">Selected systems model approximately <span className="font-semibold text-sky-200">+{addedLeads} leads per month</span> and <span className="font-semibold text-sky-200">{money.format(projectedRevenue)} in monthly lead value</span> using your inputs.</p>
+            </div>
+            <Button onClick={onStartProject} className="mt-7 w-full">Build This System <ArrowRight className="h-4 w-4" /></Button>
+            <p className="mt-5 text-xs leading-5 text-neutral-500">Planning projection only, not a performance guarantee. Final pricing depends on scope, integrations, content, ad spend, and third-party software.</p>
+          </aside>
+        </div>
       </div>
     </section>
   );
@@ -960,6 +1093,7 @@ function App() {
       <Hero onStartProject={() => setIntakeOpen(true)} />
       <Services />
       <GrowthSystems onStartProject={() => setIntakeOpen(true)} />
+      <GrowthCalculator onStartProject={() => setIntakeOpen(true)} />
       <FeaturedProjects />
       <WebsiteShowcase onStartProject={() => setIntakeOpen(true)} />
       <Process />
