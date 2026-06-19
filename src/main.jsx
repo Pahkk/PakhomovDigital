@@ -583,7 +583,7 @@ const intakeSteps = [
     title: "What are you looking to build?",
     text: "Choose the closest fit. You can clarify the details in the next step.",
     field: "projectType",
-    options: ["Mobile app", "Web app or portal", "Business website", "MVP or SaaS product", "Not sure yet"]
+    options: ["Turn my website into an app", "Create a new mobile app", "Build a web app or client portal", "Launch an MVP or SaaS product", "Create or improve my business website", "Not sure yet"]
   },
   {
     title: "What should the product help you do?",
@@ -598,16 +598,16 @@ const intakeSteps = [
     options: ["I only have the idea", "I have notes or wireframes", "I have a brand and business already", "I have an existing product to improve", "I am replacing an old website or tool"]
   },
   {
+    title: "What does the first version need most?",
+    text: "Choose the core experience you need to put in front of customers or your team.",
+    field: "coreNeed",
+    options: ["Customer accounts and dashboards", "Bookings, payments, or subscriptions", "A client portal or internal tool", "A high-converting website", "I need help defining the features"]
+  },
+  {
     title: "When do you want to launch?",
     text: "Choose the timing that best matches your situation.",
     field: "timeline",
     options: ["As soon as possible", "Within 1-2 months", "Within 3-6 months", "I am planning ahead", "Not sure yet"]
-  },
-  {
-    title: "What is your working budget?",
-    text: "A range helps us recommend a realistic first version and the right feature set.",
-    field: "budget",
-    options: ["Under $2,500", "$2,500 - $7,500", "$7,500 - $20,000", "$20,000+", "I need help defining scope"]
   }
 ];
 
@@ -633,28 +633,43 @@ const intakePlans = [
   }
 ];
 
+function getRecommendedPlan(answers) {
+  if (answers.projectType === "Create or improve my business website" || answers.coreNeed === "A high-converting website") return intakePlans[0];
+  if (answers.startingPoint === "I have an existing product to improve") return intakePlans[2];
+  return intakePlans[1];
+}
+
+function getRecommendationReason(answers) {
+  if (answers.projectType === "Turn my website into an app") return "You already have a digital foundation. A focused MVP build can turn that customer experience into a useful app.";
+  if (answers.projectType === "Create a new mobile app") return "A focused MVP gives you the clearest path from a new app idea to something real people can use.";
+  if (answers.projectType === "Create or improve my business website") return "A website launch is the strongest first move for a clearer offer, stronger credibility, and a direct customer path.";
+  if (answers.startingPoint === "I have an existing product to improve") return "You have something to build on. A product partnership gives you a clearer roadmap and room to improve it properly.";
+  return "Based on what you shared, this is the most practical first version to scope and launch.";
+}
+
 function ProjectOnboarding({ open, onClose }) {
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [answers, setAnswers] = useState({ projectType: "", goal: "", startingPoint: "", timeline: "", budget: "", plan: "", name: "", email: "", details: "" });
+  const [answers, setAnswers] = useState({ projectType: "", goal: "", startingPoint: "", coreNeed: "", timeline: "", name: "", email: "", details: "" });
   const totalSteps = intakeSteps.length + 2;
   const current = intakeSteps[step];
   const isQuestionStep = step < intakeSteps.length;
-  const isPlanStep = step === intakeSteps.length;
+  const isRecommendationStep = step === intakeSteps.length;
   const isContactStep = step === intakeSteps.length + 1;
+  const recommendedPlan = getRecommendedPlan(answers);
 
   if (!open) return null;
 
   const closeAndReset = () => {
     setStep(0);
     setSubmitted(false);
-    setAnswers({ projectType: "", goal: "", startingPoint: "", timeline: "", budget: "", plan: "", name: "", email: "", details: "" });
+    setAnswers({ projectType: "", goal: "", startingPoint: "", coreNeed: "", timeline: "", name: "", email: "", details: "" });
     onClose();
   };
 
   const next = () => {
     if (isQuestionStep && answers[current.field]) setStep((value) => value + 1);
-    if (isPlanStep && answers.plan) setStep((value) => value + 1);
+    if (isRecommendationStep) setStep((value) => value + 1);
   };
 
   const submit = (event) => {
@@ -689,7 +704,7 @@ function ProjectOnboarding({ open, onClose }) {
               <Check className="h-7 w-7" />
             </span>
             <h2 id="project-intake-title" className="mt-6 text-3xl font-semibold text-white">Quote request ready.</h2>
-            <p className="mx-auto mt-4 max-w-md leading-7 text-neutral-400">Thanks, {answers.name}. You selected the {answers.plan.toLowerCase()} direction for your {answers.projectType.toLowerCase()} project.</p>
+            <p className="mx-auto mt-4 max-w-md leading-7 text-neutral-400">Thanks, {answers.name}. Your {recommendedPlan.name.toLowerCase()} quote request is ready for review.</p>
             <Button onClick={closeAndReset} className="mt-8">Close</Button>
           </div>
         ) : (
@@ -722,32 +737,26 @@ function ProjectOnboarding({ open, onClose }) {
                     })}
                   </div>
                 </div>
-              ) : isPlanStep ? (
+              ) : isRecommendationStep ? (
                 <div>
-                  <h2 id="project-intake-title" className="text-2xl font-semibold text-white sm:text-3xl">Choose a starting direction.</h2>
-                  <p className="mt-3 leading-7 text-neutral-400">Every build is scoped around your exact needs. Choose the direction that best reflects what you want to launch.</p>
-                  <div className="mt-7 grid gap-3 md:grid-cols-3">
-                    {intakePlans.map((plan) => {
-                      const selected = answers.plan === plan.name;
-                      return (
-                        <button
-                          key={plan.name}
-                          type="button"
-                          onClick={() => setAnswers((value) => ({ ...value, plan: plan.name }))}
-                          className={`relative flex min-h-[21rem] flex-col rounded-lg border p-5 text-left transition ${selected ? "border-sky-300 bg-sky-300/10" : "border-white/10 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.06]"}`}
-                        >
-                          {plan.featured && <span className="mb-4 w-fit rounded-md bg-white px-2 py-1 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-black">Best for app ideas</span>}
-                          <h3 className="text-lg font-semibold text-white">{plan.name}</h3>
-                          <p className="mt-3 text-2xl font-semibold text-sky-200">{plan.price}</p>
-                          <p className="mt-3 text-sm leading-6 text-neutral-400">{plan.detail}</p>
-                          <ul className="mt-5 space-y-2">
-                            {plan.features.map((feature) => (
-                              <li key={feature} className="flex gap-2 text-xs leading-5 text-neutral-300"><Check className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" />{feature}</li>
-                            ))}
-                          </ul>
-                        </button>
-                      );
-                    })}
+                  <h2 id="project-intake-title" className="text-2xl font-semibold text-white sm:text-3xl">Your recommended starting point.</h2>
+                  <p className="mt-3 leading-7 text-neutral-400">We matched the direction to what you want to build, where you are starting, and the experience you need.</p>
+                  <div className="mt-7 rounded-lg border border-sky-300/40 bg-sky-300/[0.08] p-5 sm:p-7">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-200">Best fit for your project</p>
+                    <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+                      <div>
+                        <h3 className="text-3xl font-semibold text-white">{recommendedPlan.name}</h3>
+                        <p className="mt-3 max-w-xl leading-7 text-neutral-300">{getRecommendationReason(answers)}</p>
+                      </div>
+                      <p className="shrink-0 text-2xl font-semibold text-sky-200">{recommendedPlan.price}</p>
+                    </div>
+                    <div className="my-6 h-px bg-white/10" />
+                    <p className="text-sm font-semibold text-white">What you get in the first build</p>
+                    <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                      {recommendedPlan.features.map((feature) => (
+                        <li key={feature} className="flex gap-3 text-sm leading-6 text-neutral-300"><Check className="mt-0.5 h-5 w-5 shrink-0 text-sky-300" />{feature}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               ) : (
@@ -770,7 +779,7 @@ function ProjectOnboarding({ open, onClose }) {
               {isContactStep ? (
                 <Button className="min-w-40">Request Quote <ArrowRight className="h-4 w-4" /></Button>
               ) : (
-                <Button type="button" onClick={next} className="min-w-32" disabled={isQuestionStep ? !answers[current.field] : !answers.plan}>Continue <ArrowRight className="h-4 w-4" /></Button>
+                <Button type="button" onClick={next} className="min-w-32" disabled={isQuestionStep ? !answers[current.field] : false}>Continue <ArrowRight className="h-4 w-4" /></Button>
               )}
             </div>
           </form>
