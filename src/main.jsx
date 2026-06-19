@@ -375,7 +375,7 @@ function FeaturedProjects() {
           <SectionHeader align="left" eyebrow="Featured Projects" title="Products built around a real problem" text="From the first spark of an idea to a useful, launch-ready experience, the work has a clear purpose behind it." />
           <Reveal delay={0.08}>
             <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10">
-              {["Mobile Apps", "Web Apps", "Websites", "SaaS"].map((item) => (
+              {["Mobile Apps", "App Ideas", "Customer Tools", "Launch Ready"].map((item) => (
                 <div key={item} className="bg-black/72 p-5 text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">
                   {item}
                 </div>
@@ -385,7 +385,7 @@ function FeaturedProjects() {
         </div>
 
         <div className="mt-14 grid gap-4 md:grid-cols-2">
-          {projects.map((project, index) => (
+          {projects.slice(0, 2).map((project, index) => (
             <Reveal key={project.name} delay={index * 0.06}>
               <article className="group relative min-h-[30rem] overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 transition duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06]">
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/50 to-transparent opacity-0 transition group-hover:opacity-100" />
@@ -413,7 +413,7 @@ function FeaturedProjects() {
           ))}
         </div>
 
-        <div className="mt-16 border-t border-white/10 pt-12">
+        <div className="mt-10 border-t border-white/10 pt-10">
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-sky-300">Testimonials</p>
@@ -423,7 +423,7 @@ function FeaturedProjects() {
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {clientStories.map((client, index) => (
               <Reveal key={client.product} delay={index * 0.08}>
-                <article className="h-full rounded-lg border border-white/10 bg-white/[0.62] p-6 sm:p-7">
+                <article className="h-full rounded-lg border border-white/10 bg-white/[0.035] p-6 sm:p-7">
                   <div className="flex items-center gap-4">
                     <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white p-1.5">
                       <img src={client.logo} alt={client.logoAlt} className="h-full w-full object-contain" />
@@ -438,6 +438,66 @@ function FeaturedProjects() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WebsiteShowcase({ onStartProject }) {
+  const websiteOptions = [
+    {
+      eyebrow: "Service Business Website",
+      title: "Make your business easy to trust.",
+      text: "A clean, focused website for businesses that need to explain their offer, show proof, and turn visitors into real inquiries.",
+      features: ["Clear service and offer pages", "Lead capture or booking flow", "Mobile-first responsive design", "Basic SEO and launch setup"],
+      accent: "sky"
+    },
+    {
+      eyebrow: "Product or Launch Website",
+      title: "Give the new idea a place to land.",
+      text: "A high-impact launch site for a new app, product, or service that makes the concept feel real before the full product is live.",
+      features: ["Product positioning and page flow", "Waitlist or early-access form", "Conversion-focused landing page", "Analytics-ready launch setup"],
+      accent: "violet"
+    }
+  ];
+
+  return (
+    <section id="websites" className="border-y border-white/10 bg-white/[0.018] px-5 py-24 lg:px-8 lg:py-32">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeader eyebrow="Websites" title="A website that does more than sit online" text="For existing businesses and new products, PDS builds the page customers need to understand the value and take the next step." />
+        <div className="mt-14 grid gap-5 lg:grid-cols-2">
+          {websiteOptions.map((option, index) => (
+            <Reveal key={option.title} delay={index * 0.08}>
+              <article className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-5 sm:p-7">
+                <div className="rounded-md border border-white/10 bg-black/45 p-3 sm:p-4">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                    <div className="flex gap-1.5"><span className="h-2 w-2 rounded-full bg-red-400/80" /><span className="h-2 w-2 rounded-full bg-yellow-300/80" /><span className="h-2 w-2 rounded-full bg-emerald-300/80" /></div>
+                    <span className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-neutral-500">Website preview</span>
+                  </div>
+                  <div className={`mt-4 rounded-sm border border-white/10 p-5 ${option.accent === "sky" ? "bg-sky-300/[0.09]" : "bg-violet-300/[0.09]"}`}>
+                    <div className="flex items-center justify-between"><span className="text-xs font-bold tracking-[0.16em] text-white">YOUR BRAND</span><span className="h-2 w-12 rounded-full bg-white/20" /></div>
+                    <div className="mt-10 max-w-xs">
+                      <div className="h-6 w-full rounded-sm bg-white/90" />
+                      <div className="mt-3 h-3 w-4/5 rounded-sm bg-white/35" />
+                      <div className="mt-2 h-3 w-3/5 rounded-sm bg-white/20" />
+                      <div className={`mt-7 h-10 w-32 rounded-md ${option.accent === "sky" ? "bg-sky-300" : "bg-violet-300"}`} />
+                    </div>
+                    <div className="mt-9 grid grid-cols-3 gap-2">
+                      {[1, 2, 3].map((item) => <div key={item} className="h-16 rounded-sm border border-white/10 bg-white/[0.06]" />)}
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-7 text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">{option.eyebrow}</p>
+                <h3 className="mt-4 text-2xl font-semibold text-white sm:text-3xl">{option.title}</h3>
+                <p className="mt-4 leading-7 text-neutral-400">{option.text}</p>
+                <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+                  {option.features.map((feature) => <li key={feature} className="flex gap-2 text-sm text-neutral-300"><Check className="h-5 w-5 shrink-0 text-sky-300" />{feature}</li>)}
+                </ul>
+                <Button onClick={onStartProject} variant="secondary" className="mt-8">Plan Your Website <ArrowRight className="h-4 w-4" /></Button>
+              </article>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
@@ -843,6 +903,7 @@ function App() {
       <Hero onStartProject={() => setIntakeOpen(true)} />
       <Services />
       <FeaturedProjects />
+      <WebsiteShowcase onStartProject={() => setIntakeOpen(true)} />
       <Process />
       <Pricing onStartProject={() => setIntakeOpen(true)} />
       <About />
