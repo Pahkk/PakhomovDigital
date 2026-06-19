@@ -220,7 +220,7 @@ function Navbar({ onStartProject }) {
   };
 
   return (
-    <header className={`dark-shell fixed inset-x-0 top-0 z-50 border-b transition duration-300 ${scrolled ? "border-white/10 bg-black/72 backdrop-blur-2xl" : "border-transparent bg-black/20 backdrop-blur-sm"}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 border-b transition duration-300 ${scrolled ? "border-white/10 bg-black/72 backdrop-blur-2xl" : "border-transparent bg-black/20 backdrop-blur-sm"}`}>
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
         <Wordmark />
 
@@ -265,10 +265,10 @@ function Navbar({ onStartProject }) {
 
 function Background() {
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f4f7fb]">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.045)_1px,transparent_1px)] bg-[size:96px_96px] opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
-      <div className="absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-sky-300/25 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-[34rem] w-[34rem] rounded-full bg-indigo-200/30 blur-3xl" />
+    <div className="pointer-events-none fixed inset-0 -z-10 bg-black">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-[size:96px_96px] opacity-30 [mask-image:linear-gradient(to_bottom,black,transparent_78%)]" />
+      <div className="absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-sky-400/[0.08] blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-[34rem] w-[34rem] rounded-full bg-violet-400/[0.055] blur-3xl" />
     </div>
   );
 }
@@ -279,7 +279,7 @@ function HeroVisual() {
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-      className="dark-shell group relative overflow-hidden rounded-lg border border-white/10 bg-neutral-950 shadow-[0_40px_120px_rgba(15,23,42,0.25)]"
+      className="group relative overflow-hidden rounded-lg border border-white/10 bg-neutral-950 shadow-[0_40px_120px_rgba(0,0,0,0.35)]"
     >
       <img
         src={readProofConceptToProduct}
@@ -582,7 +582,7 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="dark-shell border-t border-white/10 bg-neutral-950 px-5 py-10 lg:px-8">
+    <footer className="border-t border-white/10 px-5 py-10 lg:px-8">
       <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[1fr_auto_auto_auto]">
         <div>
           <Wordmark compact />
@@ -730,7 +730,7 @@ function ProjectOnboarding({ open, onClose }) {
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-        className="dark-shell w-full max-w-4xl overflow-hidden rounded-lg border border-white/12 bg-neutral-950 shadow-2xl"
+        className="w-full max-w-4xl overflow-hidden rounded-lg border border-white/12 bg-neutral-950 shadow-2xl"
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 sm:px-7">
           <div>
@@ -837,7 +837,7 @@ function App() {
   const [intakeOpen, setIntakeOpen] = useState(false);
 
   return (
-    <main className="site-light min-h-screen bg-[#f4f7fb] text-slate-950">
+    <main className="min-h-screen bg-black text-white">
       <Background />
       <Navbar onStartProject={() => setIntakeOpen(true)} />
       <Hero onStartProject={() => setIntakeOpen(true)} />
