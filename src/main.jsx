@@ -8,11 +8,13 @@ import {
   ChevronRight,
   Database,
   Globe2,
+  MapPinned,
   Megaphone,
   Menu,
-  PenTool,
+  MessageSquareText,
   Send,
   Smartphone,
+  Workflow,
   X
 } from "lucide-react";
 import pdsLogo from "./assets/pahk-development-studios-logo-cropped.png";
@@ -25,6 +27,7 @@ const companyName = "Pahk Development Studios";
 
 const navLinks = [
   ["Services", "services"],
+  ["Growth", "growth"],
   ["Work", "work"],
   ["Process", "process"],
   ["Pricing", "pricing"],
@@ -45,7 +48,7 @@ const services = [
   },
   {
     title: "Business Websites",
-    text: "Premium websites for established businesses that need a clearer offer, stronger credibility, and a direct way to capture leads.",
+    text: "Premium websites with clearer offers, stronger credibility, lead capture, and the systems needed to turn visitors into customers.",
     icon: Globe2
   },
   {
@@ -54,14 +57,35 @@ const services = [
     icon: Database
   },
   {
-    title: "Product Planning & UI Design",
-    text: "Simple identity, app screens, website layouts, and product interfaces that make the idea feel credible from day one.",
-    icon: PenTool
+    title: "AI Assistants & Automation",
+    text: "Practical website assistants and follow-up workflows that answer questions, capture leads, and keep customer conversations moving.",
+    icon: MessageSquareText
   },
   {
-    title: "Launch Support",
-    text: "Launch pages, funnels, positioning, and practical rollout plans so the finished product has a clear path to customers.",
+    title: "Local Growth Systems",
+    text: "Local SEO structure, Google Business optimization, landing pages, and ad-ready customer journeys built to generate action.",
     icon: Megaphone
+  }
+];
+
+const growthSystems = [
+  {
+    title: "AI Website Assistant",
+    text: "Turn your website into a smart customer touchpoint. Add an assistant that answers questions, guides visitors, collects leads, and helps customers take action.",
+    outcome: "Answers, lead capture, and faster customer action.",
+    icon: MessageSquareText
+  },
+  {
+    title: "Automation & Follow-Up Systems",
+    text: "Stop losing leads after they fill out a form. Build automated follow-ups, quote workflows, appointment reminders, and review request systems that keep the business moving.",
+    outcome: "Faster response without manual chasing.",
+    icon: Workflow
+  },
+  {
+    title: "Local Growth System",
+    text: "Build the complete online foundation: modern website, Google Business optimization, local SEO structure, lead-focused pages, and ad-ready sections designed to convert.",
+    outcome: "A stronger local presence built to bring in customers.",
+    icon: MapPinned
   }
 ];
 
@@ -298,7 +322,7 @@ function Hero({ onStartProject }) {
             From business need or app idea to a product people can use.
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.24 }} className="mt-7 max-w-2xl text-lg leading-8 text-neutral-350 sm:text-xl">
-            Pahk Development Studios helps established businesses create better websites, apps, portals, and internal tools, and helps new founders turn an app idea into something real.
+            Pahk Development Studios builds websites, apps, AI assistants, automation systems, and local growth tools for businesses, while helping new founders turn an app idea into something real.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.36 }} className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Button onClick={onStartProject} className="sm:min-w-44">
@@ -333,8 +357,8 @@ function Services() {
       <div className="mx-auto max-w-7xl">
         <SectionHeader
           eyebrow="Services"
-          title="For businesses ready to grow and app ideas ready to build"
-          text="Whether you need a stronger website, a customer app, a portal for your team, or someone to build a new product from scratch, PDS handles the strategy, design, build, and launch."
+          title="Websites, apps, automations, and the systems behind growth"
+          text="Whether you need a stronger website, a customer app, a portal for your team, an AI assistant, or automated follow-up, PDS handles the strategy, design, build, and launch."
         />
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map(({ title, text, icon: Icon }, index) => (
@@ -349,6 +373,36 @@ function Services() {
             </Reveal>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function GrowthSystems({ onStartProject }) {
+  return (
+    <section id="growth" className="relative overflow-hidden border-y border-white/10 bg-white/[0.018] px-5 py-24 lg:px-8 lg:py-32">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(56,189,248,0.13),transparent_28%),radial-gradient(circle_at_84%_78%,rgba(167,139,250,0.1),transparent_28%)]" />
+      <div className="relative mx-auto max-w-7xl">
+        <SectionHeader eyebrow="Growth Systems" title="More Than a Website" text="PDS builds digital systems that help businesses capture leads, automate follow-ups, and grow online, not just look good." />
+        <div className="mt-14 grid gap-4 lg:grid-cols-3">
+          {growthSystems.map(({ title, text, outcome, icon: Icon }, index) => (
+            <Reveal key={title} delay={index * 0.07}>
+              <article className="group flex h-full flex-col rounded-lg border border-white/12 bg-black/35 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-1 hover:border-sky-300/45 hover:bg-white/[0.06] sm:p-7">
+                <span className="flex h-12 w-12 items-center justify-center rounded-lg border border-white/12 bg-white/[0.06] text-sky-200 transition group-hover:border-sky-300/40 group-hover:bg-sky-300/10">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-8 text-2xl font-semibold text-white">{title}</h3>
+                <p className="mt-4 leading-7 text-neutral-400">{text}</p>
+                <div className="mt-auto border-t border-white/10 pt-5">
+                  <p className="text-sm font-medium text-sky-200">{outcome}</p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={0.18} className="mt-10 flex justify-center">
+          <Button onClick={onStartProject} className="min-w-56">Build My Growth System <ArrowRight className="h-5 w-5" /></Button>
+        </Reveal>
       </div>
     </section>
   );
@@ -574,7 +628,7 @@ function About() {
           align="left"
           eyebrow="About"
           title="A studio for businesses ready to build better, and people ready to build their first app"
-          text="PDS works with business owners who need a stronger website, customer app, or internal tool, plus founders and creators who have an app idea and need a team to turn it into a real product."
+          text="PDS works with business owners who need stronger websites, customer apps, AI assistants, automations, or local growth systems, plus founders and creators with an app idea ready to become a real product."
         />
         <Reveal delay={0.12}>
           <div className="relative overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 sm:p-8">
@@ -650,7 +704,7 @@ function Footer() {
         <div>
           <Wordmark compact />
           <p className="mt-5 max-w-md text-sm leading-6 text-neutral-500">
-            Pahk Development Studios helps businesses build better websites and apps, and turns new app ideas into polished digital products.
+            Pahk Development Studios builds websites, apps, AI assistants, automations, and local growth systems for businesses.
           </p>
           <p className="mt-5 text-sm text-neutral-600">© 2026 Pahk Development Studios. PDS.</p>
         </div>
@@ -905,6 +959,7 @@ function App() {
       <Navbar onStartProject={() => setIntakeOpen(true)} />
       <Hero onStartProject={() => setIntakeOpen(true)} />
       <Services />
+      <GrowthSystems onStartProject={() => setIntakeOpen(true)} />
       <FeaturedProjects />
       <WebsiteShowcase onStartProject={() => setIntakeOpen(true)} />
       <Process />
