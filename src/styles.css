@@ -2,8 +2,8 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
-  background: #000;
+  color-scheme: light;
+  background: #f4f7fb;
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,8 +22,8 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: #000;
-  color: #fff;
+  background: #f4f7fb;
+  color: #101828;
 }
 
 button,
@@ -42,15 +42,83 @@ section {
 }
 
 .text-neutral-350 {
-  color: rgb(212 212 212);
+  color: #475467;
+}
+
+.site-light .text-white {
+  color: #101828;
+}
+
+.site-light .text-neutral-300 {
+  color: #344054;
+}
+
+.site-light .text-neutral-400 {
+  color: #475467;
+}
+
+.site-light .text-neutral-500,
+.site-light .text-neutral-600 {
+  color: #667085;
+}
+
+.site-light .text-sky-300,
+.site-light .text-sky-200 {
+  color: #0875a8;
+}
+
+.site-light [class*="border-white"] {
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+.site-light [class*="bg-white/"] {
+  background-color: rgba(255, 255, 255, 0.78);
+}
+
+.site-light [class*="bg-black/"] {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.site-light .dark-shell .text-white {
+  color: #fff;
+}
+
+.site-light .dark-shell .text-neutral-300 {
+  color: #d4d4d8;
+}
+
+.site-light .dark-shell .text-neutral-400 {
+  color: #a1a1aa;
+}
+
+.site-light .dark-shell .text-neutral-500,
+.site-light .dark-shell .text-neutral-600 {
+  color: #71717a;
+}
+
+.site-light .dark-shell .text-sky-300,
+.site-light .dark-shell .text-sky-200 {
+  color: #bae6fd;
+}
+
+.site-light .dark-shell [class*="border-white"] {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.site-light .dark-shell [class*="bg-white/"] {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.site-light .dark-shell [class*="bg-black/"] {
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .field {
   width: 100%;
   border-radius: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.28);
-  color: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  background: rgba(255, 255, 255, 0.84);
+  color: #101828;
   outline: none;
   padding: 0.95rem 1rem;
   transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
@@ -61,13 +129,13 @@ section {
 }
 
 .field option {
-  background: #09090b;
-  color: #fff;
+  background: #fff;
+  color: #101828;
 }
 
 .field:focus {
   border-color: rgba(125, 211, 252, 0.72);
-  background: rgba(255, 255, 255, 0.06);
+  background: #fff;
   box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.1);
 }
 
