@@ -18,6 +18,7 @@ import {
 import pdsLogo from "./assets/pahk-development-studios-logo-cropped.png";
 import plattrLogo from "./assets/plattr-logo.png";
 import readProofLogo from "./assets/readproof-logo.png";
+import readProofConceptToProduct from "./assets/readproof-concept-to-product.jpg";
 import "./styles.css";
 
 const companyName = "Pahk Development Studios";
@@ -254,97 +255,21 @@ function Background() {
 }
 
 function HeroVisual() {
-  const [comparison, setComparison] = useState(52);
-
-  const updateComparison = (event) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const next = ((event.clientX - bounds.left) / bounds.width) * 100;
-    setComparison(Math.min(100, Math.max(0, next)));
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-lg border border-white/10 bg-white/[0.025] p-4 shadow-[0_40px_120px_rgba(0,0,0,0.35)] sm:p-5"
+      className="group relative overflow-hidden rounded-lg border border-white/10 bg-neutral-950 shadow-[0_40px_120px_rgba(0,0,0,0.35)]"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_20%,rgba(125,211,252,0.12),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(255,255,255,0.055),transparent_34%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:42px_42px] opacity-35" />
-
-      <div className="relative z-10">
-        <div className="mb-5 flex items-center justify-between">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">From concept to product</p>
-          <p className="text-xs font-medium text-neutral-500">Move the divider</p>
-        </div>
-        <div
-          className="relative aspect-[0.94] overflow-hidden rounded-md border border-white/10 bg-neutral-950 shadow-[0_28px_80px_rgba(0,0,0,0.35)] sm:aspect-[1.1]"
-          onPointerMove={updateComparison}
-        >
-          <div className="absolute inset-0 bg-neutral-900 p-5 sm:p-7">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <span className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">Before</span>
-              <span className="text-xs text-neutral-600">Rough concept</span>
-            </div>
-            <div className="mt-8 grid gap-4">
-              <div className="h-4 w-3/4 rounded-sm bg-white/15" />
-              <div className="h-3 w-full rounded-sm bg-white/8" />
-              <div className="h-3 w-4/5 rounded-sm bg-white/8" />
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                {["Profile", "Bookings", "Payments", "Messages"].map((item) => (
-                  <div key={item} className="h-24 rounded-md border border-dashed border-white/15 bg-white/[0.02] p-3 text-xs text-neutral-600">
-                    {item}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-2 h-12 rounded-md border border-dashed border-white/15 bg-white/[0.02]" />
-            </div>
-          </div>
-
-          <div className="absolute inset-0 overflow-hidden" style={{ clipPath: `inset(0 ${100 - comparison}% 0 0)` }}>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_12%,rgba(56,189,248,0.26),transparent_36%),#0b1220] p-5 sm:p-7">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <span className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">After</span>
-                <span className="rounded-full bg-sky-300/15 px-2 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-sky-100">Ready to launch</span>
-              </div>
-              <div className="mt-7 flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-xs font-medium text-sky-200">Welcome back</p>
-                  <h3 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">Your business, in one place.</h3>
-                </div>
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-sky-300 text-black"><Smartphone className="h-5 w-5" /></span>
-              </div>
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                {[
-                  ["24", "New leads"],
-                  ["08", "Bookings today"]
-                ].map(([number, label]) => (
-                  <div key={label} className="rounded-md border border-white/10 bg-white/[0.07] p-4 backdrop-blur-sm">
-                    <p className="text-2xl font-semibold text-white">{number}</p>
-                    <p className="mt-1 text-xs text-neutral-400">{label}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 rounded-md border border-sky-300/25 bg-sky-300/[0.08] p-4">
-                <p className="text-sm font-semibold text-white">Everything is connected.</p>
-                <p className="mt-2 text-xs leading-5 text-sky-100/70">Clear screens, customer flow, and a product people can actually use.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="pointer-events-none absolute inset-y-0 z-20 w-px bg-white" style={{ left: `${comparison}%` }}>
-            <span className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-black text-xs font-bold text-white shadow-xl">||</span>
-          </div>
-          <input
-            aria-label="Compare rough concept and polished product"
-            className="comparison-range absolute inset-0 z-30 h-full w-full cursor-ew-resize opacity-0"
-            type="range"
-            min="0"
-            max="100"
-            value={comparison}
-            onChange={(event) => setComparison(Number(event.target.value))}
-          />
-        </div>
+      <img
+        src={readProofConceptToProduct}
+        alt="ReadProof concept sketches transformed into a polished mobile app"
+        className="block aspect-[1.78] w-full object-cover transition duration-700 group-hover:scale-[1.02]"
+      />
+      <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-white/10 bg-black/70 px-4 py-3 backdrop-blur-md sm:px-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-200">ReadProof / Concept to product</p>
+        <p className="hidden text-xs text-neutral-400 sm:block">Strategy, UX, iOS development, launch</p>
       </div>
     </motion.div>
   );
