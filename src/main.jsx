@@ -598,10 +598,10 @@ const intakeSteps = [
     options: ["I only have the idea", "I have notes or wireframes", "I have a brand and business already", "I have an existing product to improve", "I am replacing an old website or tool"]
   },
   {
-    title: "What does the first version need most?",
-    text: "Choose the core experience you need to put in front of customers or your team.",
+    title: "What should the first version of the app do?",
+    text: "Choose the main experience to build first. We will refine the exact features when we scope the product.",
     field: "coreNeed",
-    options: ["Customer accounts and dashboards", "Bookings, payments, or subscriptions", "A client portal or internal tool", "A high-converting website", "I need help defining the features"]
+    options: ["User accounts and personal profiles", "Bookings, orders, or scheduling", "Payments or subscriptions", "Progress tracking, content, or learning", "Community, chat, or sharing", "An internal dashboard for my team"]
   },
   {
     title: "When do you want to launch?",
@@ -634,7 +634,7 @@ const intakePlans = [
 ];
 
 function getRecommendedPlan(answers) {
-  if (answers.projectType === "Create or improve my business website" || answers.coreNeed === "A high-converting website") return intakePlans[0];
+  if (answers.projectType === "Create or improve my business website") return intakePlans[0];
   if (answers.startingPoint === "I have an existing product to improve") return intakePlans[2];
   return intakePlans[1];
 }
