@@ -35,7 +35,7 @@ const navLinks = [
 const services = [
   {
     title: "Mobile App Development",
-    text: "Turn a rough app idea into a real mobile product with onboarding, accounts, payments, notifications, and launch-ready polish.",
+    text: "Build the mobile experience your business needs, or turn a new app idea into a real product with accounts, payments, and launch-ready polish.",
     icon: Smartphone
   },
   {
@@ -45,7 +45,7 @@ const services = [
   },
   {
     title: "Business Websites",
-    text: "Premium websites and landing pages for small businesses that need to look serious, explain the offer, and capture leads.",
+    text: "Premium websites for established businesses that need a clearer offer, stronger credibility, and a direct way to capture leads.",
     icon: Globe2
   },
   {
@@ -98,7 +98,7 @@ const projects = [
 ];
 
 const process = [
-  ["01", "Bring the Idea", "You come with the rough version: an app idea, business problem, website need, or product concept."],
+  ["01", "Bring the Need", "You come with an app idea, a business problem, or a website that no longer reflects where the business is going."],
   ["02", "Shape the Product", "We turn it into a clear scope, screen plan, user flow, feature list, and launch direction."],
   ["03", "Build the Version", "We design and develop the app, website, dashboard, or MVP with focused communication."],
   ["04", "Launch & Handoff", "You leave with a working product, launch assets, and a clear path for what to improve next."]
@@ -291,10 +291,10 @@ function Hero({ onStartProject }) {
             transition={{ duration: 0.82, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-5xl text-5xl font-semibold leading-[0.95] text-white sm:text-6xl lg:text-6xl xl:text-7xl"
           >
-            Bring an idea. Leave with a real app, website, or digital product.
+            From business need or app idea to a product people can use.
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.24 }} className="mt-7 max-w-2xl text-lg leading-8 text-neutral-350 sm:text-xl">
-            Pahk Development Studios helps small businesses, creators, and everyday people turn rough ideas into polished apps, websites, MVPs, and launch-ready digital products.
+            Pahk Development Studios helps established businesses create better websites, apps, portals, and internal tools, and helps new founders turn an app idea into something real.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.36 }} className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Button onClick={onStartProject} className="sm:min-w-44">
@@ -306,9 +306,9 @@ function Hero({ onStartProject }) {
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.48 }} className="mt-12 grid max-w-2xl grid-cols-3 gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10">
             {[
-              ["01", "Developer-led"],
-              ["02", "Idea-to-product"],
-              ["03", "Launch-ready"]
+              ["01", "For businesses"],
+              ["02", "For app ideas"],
+              ["03", "Built to launch"]
             ].map(([number, label]) => (
               <div key={label} className="bg-black/72 p-4">
                 <p className="text-xs font-semibold text-sky-300">{number}</p>
@@ -329,8 +329,8 @@ function Services() {
       <div className="mx-auto max-w-7xl">
         <SectionHeader
           eyebrow="Services"
-          title="For app ideas, small businesses, and products that need to exist"
-          text="PDS helps you move from loose concept to real product: strategy, screens, code, website, funnel, launch, and handoff."
+          title="For businesses ready to grow and app ideas ready to build"
+          text="Whether you need a stronger website, a customer app, a portal for your team, or someone to build a new product from scratch, PDS handles the strategy, design, build, and launch."
         />
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map(({ title, text, icon: Icon }, index) => (
@@ -405,7 +405,7 @@ function Process() {
     <section id="process" className="px-5 py-24 lg:px-8 lg:py-32">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr]">
-          <SectionHeader align="left" eyebrow="Process" title="From rough idea to working product" text="You do not need a technical plan before reaching out. The process is built to turn an early idea into a clear, buildable product." />
+          <SectionHeader align="left" eyebrow="Process" title="From business need or rough idea to working product" text="You do not need a technical plan before reaching out. Bring the problem, opportunity, or early concept, and we turn it into a clear, buildable product." />
           <div className="grid gap-3">
             {process.map(([number, title, text], index) => (
               <Reveal key={title} delay={index * 0.06}>
@@ -466,8 +466,8 @@ function About() {
         <SectionHeader
           align="left"
           eyebrow="About"
-          title="A studio for people who know what they want, but not how to build it yet"
-          text="PDS exists for small businesses, founders, and people with app ideas who need someone to shape the product, design it, build it, and get it ready for real users."
+          title="A studio for businesses ready to build better, and people ready to build their first app"
+          text="PDS works with business owners who need a stronger website, customer app, or internal tool, plus founders and creators who have an app idea and need a team to turn it into a real product."
         />
         <Reveal delay={0.12}>
           <div className="relative overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-6 sm:p-8">
@@ -498,7 +498,7 @@ function Contact() {
   return (
     <section id="contact" className="px-5 py-24 lg:px-8 lg:py-32">
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
-        <SectionHeader align="left" eyebrow="Contact" title="Tell us the idea. We will help turn it into a build." text="Send the rough version. It can be a business app, customer portal, website, internal tool, or product idea that only exists in your head right now." />
+        <SectionHeader align="left" eyebrow="Contact" title="Tell us what your business needs, or the app you want to create." text="Send the rough version. It can be a website that needs an upgrade, a customer app, a portal for your team, or a product idea that only exists in your head right now." />
         <Reveal delay={0.12}>
           <form className="grid gap-4 rounded-lg border border-white/10 bg-white/[0.035] p-5 sm:grid-cols-2 sm:p-7" onSubmit={(event) => event.preventDefault()}>
             <input className="field" placeholder="Name" aria-label="Name" />
@@ -543,7 +543,7 @@ function Footer() {
         <div>
           <Wordmark compact />
           <p className="mt-5 max-w-md text-sm leading-6 text-neutral-500">
-            Pahk Development Studios turns app ideas, business problems, and website needs into polished digital products.
+            Pahk Development Studios helps businesses build better websites and apps, and turns new app ideas into polished digital products.
           </p>
           <p className="mt-5 text-sm text-neutral-600">© 2026 Pahk Development Studios. PDS.</p>
         </div>
