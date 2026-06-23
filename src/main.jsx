@@ -58,9 +58,33 @@ const process = [
   ["03", "Launch", "Set up tracking, calls-to-action, and the customer flow."],
   ["04", "Grow", "Run ads, test creative, improve the funnel, and optimize results."]
 ];
+const headlinePhrases = ["grow modern businesses.", "turn ideas into products.", "help solo developers launch.", "bring more customers in."];
 
 function scrollToId(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function TypeLine() {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [text, setText] = useState(headlinePhrases[0]);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const phrase = headlinePhrases[phraseIndex];
+    const delay = deleting ? 32 : text === phrase ? 1700 : 52;
+    const timer = window.setTimeout(() => {
+      if (!deleting && text === phrase) return setDeleting(true);
+      if (deleting && text.length === 0) {
+        setDeleting(false);
+        setPhraseIndex((current) => (current + 1) % headlinePhrases.length);
+        return;
+      }
+      setText((current) => deleting ? current.slice(0, -1) : phrase.slice(0, current.length + 1));
+    }, delay);
+    return () => window.clearTimeout(timer);
+  }, [deleting, phraseIndex, text]);
+
+  return <span className="type-line" aria-live="polite">{text}<span className="typing-cursor" aria-hidden="true" /></span>;
 }
 
 function Reveal({ children, className = "", delay = 0 }) {
@@ -97,7 +121,7 @@ function HeroSystemPreview() {
 }
 
 function Hero({ onStart }) {
-  return <section id="home" className="hero"><div className="hero-grid" /><div className="hero-inner"><div className="hero-copy"><motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="eyebrow">PAHK DEVELOPMENT STUDIOS / PDS</motion.p><motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.75 }}>Apps, websites, and ads built to grow modern businesses.</motion.h1><motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.7 }} className="hero-text">Pahk Development Studios builds high-quality digital products, landing pages, and ad systems that help businesses turn attention into real customers.</motion.p><motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28, duration: 0.7 }} className="hero-actions"><Button onClick={onStart}>Start a Project <ArrowRight size={17} /></Button><Button secondary onClick={() => scrollToId("services")}>See Services</Button></motion.div><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="main-message">We build the system. Then we bring it customers.</motion.p><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="trust-line">Websites. Mobile apps. Lead funnels. Paid ads. Launch strategy.</motion.p></div><HeroSystemPreview /></div></section>;
+  return <section id="home" className="hero"><div className="hero-grid" /><div className="hero-inner"><div className="hero-copy"><motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="eyebrow">PAHK DEVELOPMENT STUDIOS / PDS</motion.p><motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.75 }}>Apps, websites, and ads<br />built to <TypeLine /></motion.h1><motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.7 }} className="hero-text">Pahk Development Studios builds high-quality digital products, landing pages, and ad systems that help businesses turn attention into real customers.</motion.p><motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28, duration: 0.7 }} className="hero-actions"><Button onClick={onStart}>Start a Project <ArrowRight size={17} /></Button><Button secondary onClick={() => scrollToId("services")}>See Services</Button></motion.div><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="main-message">We build the system. Then we bring it customers.</motion.p><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="trust-line">Websites. Mobile apps. Lead funnels. Paid ads. Launch strategy.</motion.p></div><HeroSystemPreview /></div></section>;
 }
 
 function Services() {
