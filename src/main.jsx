@@ -71,7 +71,7 @@ function TypeLine() {
 
   useEffect(() => {
     const phrase = headlinePhrases[phraseIndex];
-    const delay = deleting ? 32 : text === phrase ? 1700 : 52;
+    const delay = deleting ? 68 : text === phrase ? 2600 : 108;
     const timer = window.setTimeout(() => {
       if (!deleting && text === phrase) return setDeleting(true);
       if (deleting && text.length === 0) {
@@ -121,7 +121,7 @@ function HeroSystemPreview() {
 }
 
 function Hero({ onStart }) {
-  return <section id="home" className="hero"><div className="hero-grid" /><div className="hero-inner"><div className="hero-copy"><motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="eyebrow">PAHK DEVELOPMENT STUDIOS / PDS</motion.p><motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.75 }}>Apps, websites, and ads<br />built to <TypeLine /></motion.h1><motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.7 }} className="hero-text">Pahk Development Studios builds high-quality digital products, landing pages, and ad systems that help businesses turn attention into real customers.</motion.p><motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28, duration: 0.7 }} className="hero-actions"><Button onClick={onStart}>Start a Project <ArrowRight size={17} /></Button><Button secondary onClick={() => scrollToId("services")}>See Services</Button></motion.div><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="main-message">We build the system. Then we bring it customers.</motion.p><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="trust-line">Websites. Mobile apps. Lead funnels. Paid ads. Launch strategy.</motion.p></div><HeroSystemPreview /></div></section>;
+  return <section id="home" className="hero"><div className="hero-grid" /><div className="hero-inner"><div className="hero-copy"><motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="eyebrow">PAHK DEVELOPMENT STUDIOS / PDS</motion.p><motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.75 }}><span className="headline-row">Apps, websites, and ads</span><span className="headline-row">built to</span><TypeLine /></motion.h1><motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.7 }} className="hero-text">Pahk Development Studios builds high-quality digital products, landing pages, and ad systems that help businesses turn attention into real customers.</motion.p><motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28, duration: 0.7 }} className="hero-actions"><Button onClick={onStart}>Start a Project <ArrowRight size={17} /></Button><Button secondary onClick={() => scrollToId("services")}>See Services</Button></motion.div><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="main-message">We build the system. Then we bring it customers.</motion.p><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="trust-line">Websites. Mobile apps. Lead funnels. Paid ads. Launch strategy.</motion.p></div><HeroSystemPreview /></div></section>;
 }
 
 function Services() {
