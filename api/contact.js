@@ -1,4 +1,7 @@
+import { Resend } from "resend";
+
 const TO_EMAIL = "npakhomov14@gmail.com";
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -12,32 +15,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        from: "PDS Website <onboarding@resend.dev>",
-        to: TO_EMAIL,
-        reply_to: email,
-        subject: `New project request from ${name}`,
-        text: [
-          `Name: ${name}`,
-          `Email: ${email}`,
-          `Business: ${business || "-"}`,
-          `Project Type: ${projectType || "-"}`,
-          `Budget: ${budget || "-"}`,
-          "",
-          "Message:",
-          message
-        ].join("\n")
-      })
+    const { error } = await resend.emails.send({
+      from: "PDS Website <onboarding@resend.dev>",
+      to: TO_EMAIL,
+      replyTo: email,
+      subject: `New project request from ${name}`,
+      text: [
+        `Name: ${name}`,
+        `Email: ${email}`,
+        `Business: ${business || "-"}`,
+        `Project Type: ${projectType || "-"}`,
+        `Budget: ${budget || "-"}`,
+        "",
+        "Message:",
+        message
+      ].join("\n")
     });
 
-    if (!response.ok) {
-      console.error("Resend error:", await response.text());
+    if (error) {
+      console.error("Resend error:", error);
       return res.status(502).json({ error: "Failed to send email." });
     }
 
