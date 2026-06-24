@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const TO_EMAIL = "npakhomov14@gmail.com";
+const TO_EMAIL = "npakhomov12@gmail.com";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
