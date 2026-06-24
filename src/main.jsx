@@ -95,8 +95,8 @@ function Wordmark() {
   return <button type="button" onClick={() => scrollToId("home")} className="wordmark" aria-label="Pahk Development Studios home"><span>PDS</span><i /> <small>PAHK DEVELOPMENT STUDIOS</small></button>;
 }
 
-function Button({ children, onClick, secondary = false, className = "", type = "button" }) {
-  return <button type={type} onClick={onClick} className={`button ${secondary ? "button-secondary" : ""} ${className}`}>{children}</button>;
+function Button({ children, onClick, secondary = false, className = "", type = "button", disabled = false }) {
+  return <button type={type} onClick={onClick} disabled={disabled} className={`button ${secondary ? "button-secondary" : ""} ${className}`}>{children}</button>;
 }
 
 function SectionHeading({ eyebrow, title, text, left = false }) {
@@ -157,8 +157,27 @@ function About() {
   return <section id="about" className="section about-section"><div className="container"><Reveal className="about-panel"><p className="eyebrow">About PDS</p><h2>PDS builds what the business needs to grow.</h2><p>Pahk Development Studios is a modern development studio focused on building digital products that are useful, polished, and built for growth. PDS combines software development, design, and marketing execution so businesses do not just get a website — they get a system that can bring in customers.</p></Reveal></div></section>;
 }
 
+const emptyContactForm = { name: "", email: "", business: "", projectType: "", budget: "", message: "" };
+
 function Contact() {
-  return <section id="contact" className="section contact-section"><div className="container contact-layout"><SectionHeading left eyebrow="Start a project" title="Tell us what you want to build." text="Bring the business goal, the product idea, or the customer problem. We will find the clearest first move." /><Reveal delay={0.1}><form className="contact-form" onSubmit={(event) => event.preventDefault()}><input className="field" placeholder="Name" aria-label="Name" required /><input className="field" type="email" placeholder="Email" aria-label="Email" required /><input className="field" placeholder="Business Name" aria-label="Business Name" /><select className="field" defaultValue="" aria-label="Project Type"><option value="" disabled>Project Type</option><option>Website</option><option>Mobile App</option><option>Landing Page</option><option>Ads</option><option>Full Growth System</option><option>Not Sure Yet</option></select><select className="field full" defaultValue="" aria-label="Budget Range"><option value="" disabled>Budget Range</option><option>Under $2,500</option><option>$2,500 – $7,500</option><option>$7,500 – $20,000</option><option>$20,000+</option><option>Still defining scope</option></select><textarea className="field full" placeholder="Message" aria-label="Message" /><Button type="submit" className="full">Send Project Request <Send size={16} /></Button></form></Reveal></div></section>;
+  const [form, setForm] = useState(emptyContactForm);
+  const [status, setStatus] = useState("idle");
+  const update = (key) => (event) => setForm((current) => ({ ...current, [key]: event.target.value }));
+
+  const submit = async (event) => {
+    event.preventDefault();
+    setStatus("sending");
+    try {
+      const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      if (!response.ok) throw new Error("Request failed");
+      setStatus("success");
+      setForm(emptyContactForm);
+    } catch (error) {
+      setStatus("error");
+    }
+  };
+
+  return <section id="contact" className="section contact-section"><div className="container contact-layout"><SectionHeading left eyebrow="Start a project" title="Tell us what you want to build." text="Bring the business goal, the product idea, or the customer problem. We will find the clearest first move." /><Reveal delay={0.1}>{status === "success" ? <p className="form-success">Thanks — your project request is in. We will get back to you shortly.</p> : <form className="contact-form" onSubmit={submit}><input className="field" placeholder="Name" aria-label="Name" required value={form.name} onChange={update("name")} /><input className="field" type="email" placeholder="Email" aria-label="Email" required value={form.email} onChange={update("email")} /><input className="field" placeholder="Business Name" aria-label="Business Name" value={form.business} onChange={update("business")} /><select className="field" aria-label="Project Type" value={form.projectType} onChange={update("projectType")}><option value="" disabled>Project Type</option><option>Website</option><option>Mobile App</option><option>Landing Page</option><option>Ads</option><option>Full Growth System</option><option>Not Sure Yet</option></select><select className="field full" aria-label="Budget Range" value={form.budget} onChange={update("budget")}><option value="" disabled>Budget Range</option><option>Under $2,500</option><option>$2,500 – $7,500</option><option>$7,500 – $20,000</option><option>$20,000+</option><option>Still defining scope</option></select><textarea className="field full" placeholder="Message" aria-label="Message" value={form.message} onChange={update("message")} /><Button type="submit" className="full" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send Project Request"} <Send size={16} /></Button>{status === "error" ? <p className="form-error full">Something went wrong — please try again or email us directly.</p> : null}</form>}</Reveal></div></section>;
 }
 
 function Footer() {
