@@ -1,13 +1,8 @@
 import { clearOAuthCookies, createSessionCookie, readOAuthCookies } from "../_session.js";
+import { getAuthOrigin } from "../_origin.js";
 
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
-
-function getOrigin(req) {
-  const host = req.headers.host;
-  const proto = req.headers["x-forwarded-proto"] || (host?.startsWith("localhost") || host?.startsWith("127.0.0.1") ? "http" : "https");
-  return `${proto}://${host}`;
-}
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -28,7 +23,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const redirectUri = `${getOrigin(req)}/api/auth/google/callback`;
+    const redirectUri = `${getAuthOrigin(req)}/api/auth/google/callback`;
     const tokenResponse = await fetch(GOOGLE_TOKEN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
