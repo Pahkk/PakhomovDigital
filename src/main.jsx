@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { motion } from "framer-motion";
-import { ArrowRight, Check, LogIn, Menu, Send, UserPlus, X } from "lucide-react";
+import { ArrowRight, BarChart3, CalendarDays, Check, CircleDot, ClipboardList, ExternalLink, FileText, FolderKanban, LayoutDashboard, LogIn, Menu, MessageSquare, Send, Settings, Sparkles, UserCircle, UserPlus, X } from "lucide-react";
 import plattrLogo from "./assets/plattr-logo.png";
 import readProofLogo from "./assets/readproof-logo.png";
 import "./styles.css";
@@ -59,6 +59,28 @@ const process = [
   ["04", "Grow", "Run ads, test creative, improve the funnel, and optimize results."]
 ];
 const headlinePhrases = ["grow modern businesses.", "turn ideas into products.", "help solo developers launch.", "bring more customers in."];
+const dashboardStats = [
+  ["Project phase", "Discovery", "Scope and goals"],
+  ["Open items", "3", "Ready for review"],
+  ["Next check-in", "This week", "Strategy call"],
+  ["Launch focus", "Offer", "Message and funnel"]
+];
+const dashboardProjects = [
+  { name: "Client Growth System", type: "Website / funnel", status: "Intake", progress: 32, detail: "Brand, offer, audience, and conversion path are being organized." },
+  { name: "Creative Direction", type: "Ads / content", status: "Queued", progress: 18, detail: "Initial hooks, offer angles, and creative testing notes will live here." }
+];
+const dashboardTasks = [
+  ["Complete project brief", "Share business goals, offer details, and target customer notes.", "Ready"],
+  ["Upload brand assets", "Logo, photos, testimonials, examples, and existing site links.", "Waiting"],
+  ["Book strategy call", "Pick a time to confirm priorities and the first build sprint.", "Next"]
+];
+const dashboardFiles = ["Project brief", "Brand assets", "Launch checklist", "Proposal draft"];
+const dashboardTimeline = [
+  ["01", "Intake", "Gather goals and assets"],
+  ["02", "Scope", "Define the first useful version"],
+  ["03", "Build", "Create the product and funnel"],
+  ["04", "Launch", "Ship, measure, and improve"]
+];
 
 function scrollToId(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -188,6 +210,13 @@ function Footer() {
   return <footer><div className="container footer-inner"><div><Wordmark /><p>Apps, websites, ads, and growth systems for modern businesses.</p><small>© 2026 Pahk Development Studios. PDS.</small></div><div className="footer-links"><button onClick={() => scrollToId("services")}>Apps</button><button onClick={() => scrollToId("services")}>Websites</button><button onClick={() => scrollToId("services")}>Ads</button><button onClick={() => scrollToId("contact")}>Contact</button></div><div className="socials"><span>Instagram</span><span>LinkedIn</span><span>X</span></div></div></footer>;
 }
 
+function Dashboard({ user, onLogout }) {
+  const displayName = user.name || user.email || "Client";
+  const firstName = displayName.split(" ")[0];
+
+  return <main className="dashboard-shell"><aside className="dashboard-sidebar"><div><Wordmark /><div className="dashboard-profile">{user.picture ? <img src={user.picture} alt="" referrerPolicy="no-referrer" /> : <UserCircle size={34} />}<div><strong>{displayName}</strong><span>{user.email}</span></div></div><nav className="dashboard-menu" aria-label="Client dashboard"><button className="active"><LayoutDashboard size={17} /> Overview</button><button><FolderKanban size={17} /> Projects</button><button><FileText size={17} /> Documents</button><button><MessageSquare size={17} /> Messages</button><button><Settings size={17} /> Account</button></nav></div><button className="dashboard-logout" onClick={onLogout}>Log out</button></aside><section className="dashboard-main"><header className="dashboard-topbar"><div><p className="eyebrow">Client workspace</p><h1>Welcome back, {firstName}.</h1></div><div className="dashboard-actions"><a href="mailto:npakhomov12@gmail.com"><MessageSquare size={16} /> Message PDS</a><a className="primary" href="https://cal.com/" target="_blank" rel="noreferrer"><CalendarDays size={16} /> Book call</a></div></header><div className="dashboard-stats">{dashboardStats.map(([label, value, hint]) => <article key={label}><span>{label}</span><strong>{value}</strong><p>{hint}</p></article>)}</div><div className="dashboard-grid"><section className="dashboard-panel dashboard-projects"><div className="panel-heading"><div><p className="eyebrow">Active work</p><h2>Project command center</h2></div><button><ExternalLink size={15} /> View all</button></div>{dashboardProjects.map((project) => <article className="dashboard-project" key={project.name}><div><span>{project.type}</span><h3>{project.name}</h3><p>{project.detail}</p></div><div className="project-progress"><b>{project.status}</b><strong>{project.progress}%</strong><i><em style={{ width: `${project.progress}%` }} /></i></div></article>)}</section><section className="dashboard-panel"><div className="panel-heading compact"><div><p className="eyebrow">Next steps</p><h2>Action list</h2></div><ClipboardList size={19} /></div><div className="task-list">{dashboardTasks.map(([title, text, status]) => <article key={title}><CircleDot size={16} /><div><strong>{title}</strong><p>{text}</p></div><span>{status}</span></article>)}</div></section><section className="dashboard-panel"><div className="panel-heading compact"><div><p className="eyebrow">Files</p><h2>Workspace docs</h2></div><FileText size={19} /></div><div className="file-list">{dashboardFiles.map((file) => <button key={file}><FileText size={16} />{file}<ArrowRight size={14} /></button>)}</div></section><section className="dashboard-panel"><div className="panel-heading compact"><div><p className="eyebrow">Timeline</p><h2>Build path</h2></div><BarChart3 size={19} /></div><div className="timeline-list">{dashboardTimeline.map(([number, title, text]) => <article key={number}><span>{number}</span><div><strong>{title}</strong><p>{text}</p></div></article>)}</div></section></div><section className="dashboard-focus"><div><Sparkles size={20} /><p className="eyebrow">Priority</p><h2>Turn the project brief into a clean launch plan.</h2><p>Once the brief and assets are in, PDS can lock the first sprint around the offer, product surface, and customer flow.</p></div><a href="mailto:npakhomov12@gmail.com?subject=PDS%20Project%20Brief"><Send size={16} /> Send details</a></section></section></main>;
+}
+
 function AuthModal({ mode, onClose }) {
   const [activeMode, setActiveMode] = useState(mode || "login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -228,6 +257,8 @@ function App() {
     await fetch("/api/auth/logout", { method: "POST" }).catch(() => null);
     setUser(null);
   };
+
+  if (user) return <Dashboard user={user} onLogout={logout} />;
 
   return <main><Navbar onStart={start} onAuth={setAuthMode} user={user} onLogout={logout} /><Hero onStart={start} /><Services /><GrowthSystem /><Packages onStart={start} /><MonthlyServices /><Industries /><Work /><Process /><About /><Contact /><Footer />{authMode ? <AuthModal mode={authMode} onClose={() => setAuthMode(null)} /> : null}</main>;
 }
