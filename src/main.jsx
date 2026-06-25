@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Menu, Send, X } from "lucide-react";
+import { ArrowRight, Check, LogIn, Menu, Send, UserPlus, X } from "lucide-react";
 import plattrLogo from "./assets/plattr-logo.png";
 import readProofLogo from "./assets/readproof-logo.png";
 import "./styles.css";
@@ -103,7 +103,7 @@ function SectionHeading({ eyebrow, title, text, left = false }) {
   return <Reveal className={left ? "max-w-2xl" : "mx-auto max-w-3xl text-center"}><p className="eyebrow">{eyebrow}</p><h2 className="section-title">{title}</h2>{text ? <p className="section-text">{text}</p> : null}</Reveal>;
 }
 
-function Navbar({ onStart }) {
+function Navbar({ onStart, onAuth, user, onLogout }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -113,7 +113,11 @@ function Navbar({ onStart }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   const go = (id) => { setOpen(false); scrollToId(id); };
-  return <header className={`nav ${scrolled ? "nav-scrolled" : ""}`}><nav><Wordmark /><div className="nav-links">{navLinks.map(([label, id]) => <button key={id} onClick={() => go(id)}>{label}</button>)}</div><Button onClick={onStart} className="nav-cta">Start a Project <ArrowRight size={16} /></Button><button className="menu-button" onClick={() => setOpen(!open)} aria-label={open ? "Close navigation" : "Open navigation"}>{open ? <X size={20} /> : <Menu size={20} />}</button></nav>{open ? <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="mobile-menu">{navLinks.map(([label, id]) => <button key={id} onClick={() => go(id)}>{label}</button>)}<Button onClick={() => { setOpen(false); onStart(); }}>Start a Project <ArrowRight size={16} /></Button></motion.div> : null}</header>;
+  const openAuth = (mode) => {
+    setOpen(false);
+    onAuth(mode);
+  };
+  return <header className={`nav ${scrolled ? "nav-scrolled" : ""}`}><nav><Wordmark /><div className="nav-links">{navLinks.map(([label, id]) => <button key={id} onClick={() => go(id)}>{label}</button>)}</div>{user ? <div className="nav-auth signed-in"><span>{user.name || user.email}</span><button onClick={onLogout}>Log out</button></div> : <div className="nav-auth"><button onClick={() => openAuth("login")}><LogIn size={15} /> Log in</button><button onClick={() => openAuth("signup")}><UserPlus size={15} /> Sign up</button></div>}<Button onClick={onStart} className="nav-cta">Start a Project <ArrowRight size={16} /></Button><button className="menu-button" onClick={() => setOpen(!open)} aria-label={open ? "Close navigation" : "Open navigation"}>{open ? <X size={20} /> : <Menu size={20} />}</button></nav>{open ? <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="mobile-menu">{navLinks.map(([label, id]) => <button key={id} onClick={() => go(id)}>{label}</button>)}{user ? <><span className="mobile-user">{user.name || user.email}</span><button onClick={() => { setOpen(false); onLogout(); }}>Log out</button></> : <><button onClick={() => openAuth("login")}>Log in</button><button onClick={() => openAuth("signup")}>Sign up</button></>}<Button onClick={() => { setOpen(false); onStart(); }}>Start a Project <ArrowRight size={16} /></Button></motion.div> : null}</header>;
 }
 
 function HeroSystemPreview() {
@@ -184,9 +188,48 @@ function Footer() {
   return <footer><div className="container footer-inner"><div><Wordmark /><p>Apps, websites, ads, and growth systems for modern businesses.</p><small>© 2026 Pahk Development Studios. PDS.</small></div><div className="footer-links"><button onClick={() => scrollToId("services")}>Apps</button><button onClick={() => scrollToId("services")}>Websites</button><button onClick={() => scrollToId("services")}>Ads</button><button onClick={() => scrollToId("contact")}>Contact</button></div><div className="socials"><span>Instagram</span><span>LinkedIn</span><span>X</span></div></div></footer>;
 }
 
+function AuthModal({ mode, onClose }) {
+  const [activeMode, setActiveMode] = useState(mode || "login");
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [message, setMessage] = useState("");
+  const isSignup = activeMode === "signup";
+  const update = (key) => (event) => {
+    setMessage("");
+    setForm((current) => ({ ...current, [key]: event.target.value }));
+  };
+  const submit = (event) => {
+    event.preventDefault();
+    setMessage("Email accounts need a database provider before they can be enabled. Google sign-in is ready to connect.");
+  };
+  const continueWithGoogle = () => {
+    window.location.href = "/api/auth/google";
+  };
+
+  useEffect(() => {
+    setActiveMode(mode || "login");
+  }, [mode]);
+
+  return <div className="auth-backdrop" role="presentation" onMouseDown={onClose}><motion.section initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title" onMouseDown={(event) => event.stopPropagation()}><button className="auth-close" onClick={onClose} aria-label="Close sign in"><X size={18} /></button><div className="auth-copy"><p className="eyebrow">Client access</p><h2 id="auth-title">{isSignup ? "Create your PDS account." : "Log in to PDS."}</h2><p>{isSignup ? "Start a client account for project updates, proposals, and launch assets." : "Access your PDS client workspace and project materials."}</p></div><div className="auth-tabs" role="tablist" aria-label="Authentication mode"><button className={activeMode === "login" ? "active" : ""} onClick={() => setActiveMode("login")} role="tab" aria-selected={activeMode === "login"}><LogIn size={15} /> Log in</button><button className={activeMode === "signup" ? "active" : ""} onClick={() => setActiveMode("signup")} role="tab" aria-selected={activeMode === "signup"}><UserPlus size={15} /> Sign up</button></div><button className="google-button" onClick={continueWithGoogle}><span className="google-mark" aria-hidden="true">G</span> Continue with Google</button><div className="auth-divider"><span>or</span></div><form className="auth-form" onSubmit={submit}>{isSignup ? <input className="field" placeholder="Name" aria-label="Name" value={form.name} onChange={update("name")} /> : null}<input className="field" type="email" placeholder="Email" aria-label="Email" required value={form.email} onChange={update("email")} /><input className="field" type="password" placeholder="Password" aria-label="Password" required value={form.password} onChange={update("password")} /><Button type="submit" className="full">{isSignup ? "Create Account" : "Log In"} <ArrowRight size={16} /></Button>{message ? <p className="auth-message">{message}</p> : null}</form></motion.section></div>;
+}
+
 function App() {
+  const [authMode, setAuthMode] = useState(null);
+  const [user, setUser] = useState(null);
   const start = () => scrollToId("contact");
-  return <main><Navbar onStart={start} /><Hero onStart={start} /><Services /><GrowthSystem /><Packages onStart={start} /><MonthlyServices /><Industries /><Work /><Process /><About /><Contact /><Footer /></main>;
+
+  useEffect(() => {
+    fetch("/api/auth/session")
+      .then((response) => response.ok ? response.json() : { user: null })
+      .then((data) => setUser(data.user || null))
+      .catch(() => setUser(null));
+  }, []);
+
+  const logout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => null);
+    setUser(null);
+  };
+
+  return <main><Navbar onStart={start} onAuth={setAuthMode} user={user} onLogout={logout} /><Hero onStart={start} /><Services /><GrowthSystem /><Packages onStart={start} /><MonthlyServices /><Industries /><Work /><Process /><About /><Contact /><Footer />{authMode ? <AuthModal mode={authMode} onClose={() => setAuthMode(null)} /> : null}</main>;
 }
 
 createRoot(document.getElementById("root")).render(<App />);
